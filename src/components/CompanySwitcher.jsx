@@ -14,12 +14,14 @@ export default function CompanySwitcher() {
   const { company, companies, setActiveCompanyId } = useCompany();
 
   return (
-    <div className="p-3 border-t border-white/[0.08]">
+    <div className="px-3 py-3 border-b border-white/[0.08]">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="w-full glass-card p-3 space-y-1 text-left hover:bg-white/[0.10] transition-colors group">
             <div className="flex items-center gap-2">
-              <Building2 className="h-3.5 w-3.5 text-white/50" />
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#0FD68C]/20 text-[#0FD68C] text-[10px] font-bold shrink-0">
+                {company.name.split(" ").map(w => w[0]).join("").slice(0, 2)}
+              </div>
               <span className="text-xs font-medium text-white/80 truncate flex-1">
                 {company.name}
               </span>
@@ -38,8 +40,8 @@ export default function CompanySwitcher() {
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="start"
-          side="top"
-          className="w-[232px] bg-[hsl(220,20%,7%)] border-white/[0.15]"
+          side="bottom"
+          className="w-[232px] bg-[hsl(200,25%,7%)] border-white/[0.15]"
         >
           {companies.map((c) => (
             <DropdownMenuItem
@@ -56,7 +58,7 @@ export default function CompanySwitcher() {
                     {c.name}
                   </span>
                   {c.id === company.id && (
-                    <Check className="h-3 w-3 text-emerald-400 shrink-0" />
+                    <Check className="h-3 w-3 text-[#0FD68C] shrink-0" />
                   )}
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">

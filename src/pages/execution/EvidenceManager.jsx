@@ -17,6 +17,9 @@ import {
 import PageHeader from "@/components/PageHeader";
 import MetricCard from "@/components/MetricCard";
 import LoadingState from "@/components/LoadingState";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -42,11 +45,11 @@ import { useCompanyEvidenceDocuments } from "@/hooks/useCompanyData";
 
 const TYPE_CONFIG = {
   Invoice: {
-    color: "bg-sky-500/20 text-sky-400 border-sky-500/30",
+    color: "bg-[#2B5AEE]/20 text-[#2B5AEE] border-[#2B5AEE]/30",
     icon: FileText,
   },
   Certificate: {
-    color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+    color: "bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30",
     icon: FileCheck,
   },
   Report: {
@@ -61,8 +64,8 @@ const TYPE_CONFIG = {
 
 const OCR_STATUS_CONFIG = {
   Complete: {
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/20",
+    color: "text-[#0FD68C]",
+    bg: "bg-[#0FD68C]/20",
     icon: CheckCircle2,
     pct: 100,
   },
@@ -84,9 +87,9 @@ function ConfidenceBar({ confidence }) {
   const pct = Math.round(confidence * 100);
   const color =
     pct >= 95
-      ? "bg-emerald-500"
+      ? "bg-[#0FD68C]"
       : pct >= 85
-      ? "bg-cyan-500"
+      ? "bg-[#0CC5D4]"
       : pct >= 70
       ? "bg-amber-500"
       : "bg-red-500";
@@ -226,7 +229,7 @@ function DocumentCard({ doc }) {
                   </span>
                   <div className="flex items-center gap-2">
                     <Hash className="h-3 w-3 text-white/40" />
-                    <code className="text-[11px] font-mono text-cyan-400 truncate">
+                    <code className="text-[11px] font-mono text-[#0CC5D4] truncate">
                       {doc.provenance.hash}
                     </code>
                   </div>
@@ -258,6 +261,8 @@ export default function EvidenceManager() {
   const { data: documents, loading } = useCompanyEvidenceDocuments();
   const [uploadOpen, setUploadOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const insights = usePageInsights("evidence");
+  const handoff = usePageHandoff("evidence");
 
   const stats = useMemo(() => {
     if (!documents)
@@ -297,59 +302,66 @@ export default function EvidenceManager() {
         subtitle="Audit-ready document management with OCR provenance"
         stage="execution"
         actions={
-          <Dialog open={uploadOpen} onOpenChange={setUploadOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs">
-                <Upload className="h-3.5 w-3.5 mr-1.5" />
-                Upload Document
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="glass-card border-white/10 bg-[hsl(0,0%,6%)]">
-              <DialogHeader>
-                <DialogTitle className="font-display">
-                  Upload Evidence Document
-                </DialogTitle>
-                <DialogDescription>
-                  Upload supporting documents for emissions data verification.
-                  OCR will automatically extract relevant fields.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 pt-2">
-                <div className="space-y-2">
-                  <Label className="text-xs text-white/60">Document File</Label>
-                  <div className="border-2 border-dashed border-white/10 rounded-lg p-8 text-center hover:border-emerald-500/30 transition-colors cursor-pointer">
-                    <Upload className="h-8 w-8 text-white/40 mx-auto mb-2" />
-                    <p className="text-sm text-white/50">
-                      Drag & drop or click to browse
-                    </p>
-                    <p className="text-[10px] text-white/40 mt-1">
-                      PDF, XLSX, CSV up to 25MB
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs text-white/60">Supplier</Label>
-                  <Input
-                    placeholder="Select supplier..."
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs text-white/60">Document Type</Label>
-                  <Input
-                    placeholder="Invoice, Certificate, Report, Declaration"
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-                <Button
-                  className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
-                  onClick={() => setUploadOpen(false)}
-                >
-                  Upload & Process
+          <>
+            <AgentHandoffButton handoff={handoff} />
+            <Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2">
+              <Upload className="h-3.5 w-3.5" />
+              Upload
+            </Button>
+            <Dialog open={uploadOpen} onOpenChange={setUploadOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black text-xs">
+                  <Upload className="h-3.5 w-3.5 mr-1.5" />
+                  Upload Document
                 </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+              </DialogTrigger>
+              <DialogContent className="glass-card border-white/10 bg-[hsl(0,0%,6%)]">
+                <DialogHeader>
+                  <DialogTitle className="font-display">
+                    Upload Evidence Document
+                  </DialogTitle>
+                  <DialogDescription>
+                    Upload supporting documents for emissions data verification.
+                    OCR will automatically extract relevant fields.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 pt-2">
+                  <div className="space-y-2">
+                    <Label className="text-xs text-white/60">Document File</Label>
+                    <div className="border-2 border-dashed border-white/10 rounded-lg p-8 text-center hover:border-[#0FD68C]/30 transition-colors cursor-pointer">
+                      <Upload className="h-8 w-8 text-white/40 mx-auto mb-2" />
+                      <p className="text-sm text-white/50">
+                        Drag & drop or click to browse
+                      </p>
+                      <p className="text-[10px] text-white/40 mt-1">
+                        PDF, XLSX, CSV up to 25MB
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs text-white/60">Supplier</Label>
+                    <Input
+                      placeholder="Select supplier..."
+                      className="bg-white/5 border-white/10"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs text-white/60">Document Type</Label>
+                    <Input
+                      placeholder="Invoice, Certificate, Report, Declaration"
+                      className="bg-white/5 border-white/10"
+                    />
+                  </div>
+                  <Button
+                    className="w-full bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black"
+                    onClick={() => setUploadOpen(false)}
+                  >
+                    Upload & Process
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </>
         }
       />
 
@@ -388,6 +400,14 @@ export default function EvidenceManager() {
           )}% verified`}
         />
       </div>
+
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
 
       {/* --- Search --- */}
       <div className="relative max-w-md">

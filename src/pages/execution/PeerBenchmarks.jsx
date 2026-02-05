@@ -11,10 +11,14 @@ import {
   ComposedChart,
   Line,
 } from "recharts";
-import { Activity, Award, TrendingDown, BarChart3 } from "lucide-react";
+import { Activity, Award, TrendingDown, BarChart3, Plus } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import MetricCard from "@/components/MetricCard";
 import LoadingState from "@/components/LoadingState";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -28,8 +32,8 @@ import { useCompanyPeerBenchmarks, useCompanyEmissionsSummary } from "@/hooks/us
 import { useCompany } from "@/context/CompanyContext";
 
 const CDP_COLORS = {
-  A: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-  "A-": "bg-emerald-500/15 text-emerald-400/80 border-emerald-500/25",
+  A: "bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30",
+  "A-": "bg-[#0FD68C]/15 text-[#0FD68C]/80 border-[#0FD68C]/25",
   B: "bg-amber-500/20 text-amber-400 border-amber-500/30",
   C: "bg-red-500/20 text-red-400 border-red-500/30",
   D: "bg-red-500/30 text-red-400 border-red-500/40",
@@ -50,7 +54,7 @@ function TotalEmissionsTooltip({ active, payload }) {
       <div className="text-xs text-white/50 mb-1">{d.sector}</div>
       <div className="flex justify-between gap-4 text-xs">
         <span className="text-white/50">Total tCO2e</span>
-        <span className="font-mono font-bold text-emerald-400">
+        <span className="font-mono font-bold text-[#0FD68C]">
           {fmt(d.tCO2eTotal)}
         </span>
       </div>
@@ -72,7 +76,7 @@ function IntensityTooltip({ active, payload }) {
       </p>
       <div className="flex justify-between gap-4 text-xs">
         <span className="text-white/50">Intensity</span>
-        <span className="font-mono font-bold text-cyan-400">
+        <span className="font-mono font-bold text-[#0CC5D4]">
           {d.intensityPerRevenue.toFixed(1)}
         </span>
       </div>
@@ -88,6 +92,8 @@ export default function PeerBenchmarks() {
   const emissions = useCompanyEmissionsSummary();
   const { company } = useCompany();
   const myName = company.name;
+  const insights = usePageInsights("benchmarks");
+  const handoff = usePageHandoff("benchmarks");
 
   const chartData = useMemo(() => {
     if (!peers) return [];
@@ -123,6 +129,15 @@ export default function PeerBenchmarks() {
         title="Peer Benchmarks"
         subtitle="Compare your performance against industry peers"
         stage="execution"
+        actions={
+          <>
+            <AgentHandoffButton handoff={handoff} />
+            <Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2">
+              <Plus className="h-3.5 w-3.5" />
+              Add Peer
+            </Button>
+          </>
+        }
       />
 
       {/* --- Metric Cards --- */}
@@ -158,6 +173,14 @@ export default function PeerBenchmarks() {
           variant="accent"
         />
       </div>
+
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
 
       {/* --- Charts --- */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
@@ -218,12 +241,12 @@ export default function PeerBenchmarks() {
                       key={entry.id}
                       fill={
                         entry.company === myName
-                          ? "#22c55e"
+                          ? "#0FD68C"
                           : "rgba(255,255,255,0.15)"
                       }
                       stroke={
                         entry.company === myName
-                          ? "#22c55e"
+                          ? "#0FD68C"
                           : "rgba(255,255,255,0.05)"
                       }
                     />
@@ -288,7 +311,7 @@ export default function PeerBenchmarks() {
                       key={entry.id}
                       fill={
                         entry.company === myName
-                          ? "#22c55e"
+                          ? "#0FD68C"
                           : "rgba(255,255,255,0.15)"
                       }
                     />
@@ -297,7 +320,7 @@ export default function PeerBenchmarks() {
                 <Line
                   type="monotone"
                   dataKey="intensityPerRevenue"
-                  stroke="#22d3ee"
+                  stroke="#0CC5D4"
                   strokeWidth={2}
                   dot={false}
                   strokeDasharray="4 4"
@@ -356,7 +379,7 @@ export default function PeerBenchmarks() {
                   key={peer.id}
                   className={`border-white/[0.08] transition-colors ${
                     isMeridian
-                      ? "bg-emerald-500/[0.06] border-l-2 border-l-emerald-500/50"
+                      ? "bg-[#0FD68C]/[0.06] border-l-2 border-l-[#0FD68C]/50"
                       : "hover:bg-white/[0.06]"
                   }`}
                 >
@@ -364,13 +387,13 @@ export default function PeerBenchmarks() {
                     <div className="flex items-center gap-2">
                       <span
                         className={`text-sm font-medium ${
-                          isMeridian ? "text-emerald-400" : "text-white/80"
+                          isMeridian ? "text-[#0FD68C]" : "text-white/80"
                         }`}
                       >
                         {peer.company}
                       </span>
                       {isMeridian && (
-                        <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[9px] border">
+                        <Badge className="bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30 text-[9px] border">
                           You
                         </Badge>
                       )}
@@ -381,7 +404,7 @@ export default function PeerBenchmarks() {
                   </TableCell>
                   <TableCell
                     className={`text-right font-mono text-sm font-semibold ${
-                      isMeridian ? "text-emerald-400" : "text-white/70"
+                      isMeridian ? "text-[#0FD68C]" : "text-white/70"
                     }`}
                   >
                     {fmt(peer.tCO2eTotal)}
@@ -394,7 +417,7 @@ export default function PeerBenchmarks() {
                   </TableCell>
                   <TableCell className="text-center">
                     {peer.sciApproved ? (
-                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px]">
+                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#0FD68C]/20 text-[#0FD68C] text-[10px]">
                         &#10003;
                       </span>
                     ) : (

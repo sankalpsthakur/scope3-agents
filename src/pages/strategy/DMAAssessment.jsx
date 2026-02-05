@@ -15,26 +15,30 @@ import { Target, CheckCircle2, BarChart3, TrendingUp, Info } from 'lucide-react'
 import PageHeader from '@/components/PageHeader';
 import MetricCard from '@/components/MetricCard';
 import LoadingState from '@/components/LoadingState';
+import AgentHandoffButton from '@/components/AgentHandoffButton';
+import AgentInsightCard from '@/components/AgentInsightCard';
+import { usePageInsights, usePageHandoff } from '@/context/AgentContext';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useCompanyIRORegister } from '@/hooks/useCompanyData';
 
 const TOPIC_COLORS = {
-  E1: '#34d399', E2: '#34d399', E3: '#34d399', E4: '#34d399', E5: '#34d399',
-  S1: '#38bdf8', S2: '#38bdf8', S3: '#38bdf8', S4: '#38bdf8',
-  G1: '#fbbf24',
+  E1: '#0FD68C', E2: '#0FD68C', E3: '#0FD68C', E4: '#0FD68C', E5: '#0FD68C',
+  S1: '#2B5AEE', S2: '#2B5AEE', S3: '#2B5AEE', S4: '#2B5AEE',
+  G1: '#1BB892',
 };
 
 const TOPIC_CATEGORY_LABELS = {
-  E: { label: 'Environmental', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-  S: { label: 'Social', color: 'bg-sky-500/20 text-sky-400 border-sky-500/30' },
-  G: { label: 'Governance', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
+  E: { label: 'Environmental', color: 'bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30' },
+  S: { label: 'Social', color: 'bg-[#2B5AEE]/20 text-[#2B5AEE] border-[#2B5AEE]/30' },
+  G: { label: 'Governance', color: 'bg-[#1BB892]/20 text-[#1BB892] border-[#1BB892]/30' },
 };
 
 const IRO_TYPE_STYLES = {
   Impact: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
   Risk: 'bg-red-500/20 text-red-400 border-red-500/30',
-  Opportunity: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+  Opportunity: 'bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30',
 };
 
 function CustomTooltipContent({ active, payload }) {
@@ -51,11 +55,11 @@ function CustomTooltipContent({ active, payload }) {
       <div className="grid grid-cols-2 gap-2 text-xs">
         <div>
           <span className="text-white/65">Impact Score</span>
-          <p className="font-mono font-bold text-emerald-400">{d.impactMateriality}</p>
+          <p className="font-mono font-bold text-[#0FD68C]">{d.impactMateriality}</p>
         </div>
         <div>
           <span className="text-white/50">Financial Score</span>
-          <p className="font-mono font-bold text-sky-400">{d.financialMateriality}</p>
+          <p className="font-mono font-bold text-[#2B5AEE]">{d.financialMateriality}</p>
         </div>
       </div>
     </div>
@@ -89,6 +93,8 @@ function QuadrantLabel({ viewBox, text, position }) {
 }
 
 export default function DMAAssessment() {
+  const insights = usePageInsights("dma");
+  const handoff = usePageHandoff("dma");
   const { data: iros, loading } = useCompanyIRORegister();
   const [hoveredId, setHoveredId] = useState(null);
 
@@ -132,6 +138,7 @@ export default function DMAAssessment() {
         title="Double Materiality Assessment"
         subtitle="CSRD-compliant impact & financial materiality matrix"
         stage="strategy"
+        actions={<><AgentHandoffButton handoff={handoff} /><Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2"><Target className="h-3.5 w-3.5" />Export Matrix</Button></>}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -165,6 +172,14 @@ export default function DMAAssessment() {
         />
       </div>
 
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_340px] gap-4">
         <div className="glass-card card-strategy p-6">
           <div className="flex items-center justify-between mb-4">
@@ -178,15 +193,15 @@ export default function DMAAssessment() {
             </div>
             <div className="flex items-center gap-4 text-xs text-white/60">
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#0FD68C]" />
                 Environmental
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-sky-400" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#2B5AEE]" />
                 Social
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#1BB892]" />
                 Governance
               </div>
             </div>
@@ -256,7 +271,7 @@ export default function DMAAssessment() {
                   {scatterData.map((entry) => (
                     <Cell
                       key={entry.id}
-                      fill={TOPIC_COLORS[entry.topicCode] || '#34d399'}
+                      fill={TOPIC_COLORS[entry.topicCode] || '#0FD68C'}
                       fillOpacity={hoveredId === entry.id ? 1 : 0.7}
                       stroke={hoveredId === entry.id ? '#fff' : 'transparent'}
                       strokeWidth={hoveredId === entry.id ? 2 : 0}
@@ -274,11 +289,11 @@ export default function DMAAssessment() {
 
         <div className="glass-card card-strategy p-4 flex flex-col">
           <div className="flex items-center gap-2 mb-3">
-            <Info className="h-4 w-4 text-emerald-400" />
+            <Info className="h-4 w-4 text-[#0FD68C]" />
             <h3 className="text-sm font-display font-semibold text-white">
               Material Topics
             </h3>
-            <Badge className="ml-auto bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px] border">
+            <Badge className="ml-auto bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30 text-[10px] border">
               {materialTopics.length}
             </Badge>
           </div>
@@ -309,11 +324,11 @@ export default function DMAAssessment() {
                     <div className="flex items-center gap-3 text-[10px]">
                       <div className="flex items-center gap-1">
                         <span className="text-white/65">IMP</span>
-                        <span className="font-mono font-bold text-emerald-400">{iro.impactMateriality}</span>
+                        <span className="font-mono font-bold text-[#0FD68C]">{iro.impactMateriality}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <span className="text-white/65">FIN</span>
-                        <span className="font-mono font-bold text-sky-400">{iro.financialMateriality}</span>
+                        <span className="font-mono font-bold text-[#2B5AEE]">{iro.financialMateriality}</span>
                       </div>
                       <Badge className="ml-auto bg-white/10 text-white/50 border-white/10 text-[9px] border">
                         {iro.timeHorizon}

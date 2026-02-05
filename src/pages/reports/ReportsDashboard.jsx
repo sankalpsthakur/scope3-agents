@@ -9,10 +9,14 @@ import {
   AlertCircle,
   ArrowRight,
 } from "lucide-react";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
 import PageHeader from "@/components/PageHeader";
 import MetricCard from "@/components/MetricCard";
 import LoadingState from "@/components/LoadingState";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useCompanyESRSKPIs, useCompanyIRORegister } from "@/hooks/useCompanyData";
 
@@ -31,7 +35,7 @@ const STANDARD_CONFIG = {
 
 
 function statusBadge(pct) {
-  if (pct >= 80) return { label: "Ready", style: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25" };
+  if (pct >= 80) return { label: "Ready", style: "bg-[#0FD68C]/15 text-[#0FD68C] border-[#0FD68C]/25" };
   if (pct >= 40) return { label: "In Progress", style: "bg-amber-500/15 text-amber-400 border-amber-500/25" };
   return { label: "Incomplete", style: "bg-red-500/15 text-red-400 border-red-500/25" };
 }
@@ -45,9 +49,9 @@ function StandardCard({ code, config, kpis, iros, index }) {
   const catKey = code[0];
   const badgeColor =
     catKey === "E"
-      ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+      ? "bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30"
       : catKey === "S"
-      ? "bg-sky-500/20 text-sky-400 border-sky-500/30"
+      ? "bg-[#2B5AEE]/20 text-[#2B5AEE] border-[#2B5AEE]/30"
       : "bg-amber-500/20 text-amber-400 border-amber-500/30";
 
   return (
@@ -85,7 +89,7 @@ function StandardCard({ code, config, kpis, iros, index }) {
             <span className="font-mono text-white/60">{iroCount}</span> IROs
           </span>
         </div>
-        {pct >= 80 && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />}
+        {pct >= 80 && <CheckCircle2 className="h-3.5 w-3.5 text-[#0FD68C]" />}
         {pct >= 40 && pct < 80 && <Clock className="h-3.5 w-3.5 text-amber-400" />}
         {pct < 40 && <AlertCircle className="h-3.5 w-3.5 text-red-400" />}
       </div>
@@ -94,6 +98,8 @@ function StandardCard({ code, config, kpis, iros, index }) {
 }
 
 export default function ReportsDashboard() {
+  const insights = usePageInsights("reports");
+  const handoff = usePageHandoff("reports");
   const { data: kpis, loading: kpiLoading } = useCompanyESRSKPIs();
   const { data: iros, loading: iroLoading } = useCompanyIRORegister();
 
@@ -136,6 +142,7 @@ export default function ReportsDashboard() {
         title="Reports Dashboard"
         subtitle="ESRS reporting status and export management"
         stage="reports"
+        actions={<><AgentHandoffButton handoff={handoff} /><Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2"><FileBarChart className="h-3.5 w-3.5" />View Readiness</Button></>}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -168,6 +175,14 @@ export default function ReportsDashboard() {
         />
       </div>
 
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
+
       <div>
         <h3 className="text-sm font-display font-semibold text-white/60 uppercase tracking-wider mb-4">
           ESRS Standard Progress
@@ -192,7 +207,7 @@ export default function ReportsDashboard() {
           className="glass-card p-5 hover:bg-white/[0.10] transition-all duration-300 group flex items-center justify-between"
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-500/15 text-violet-400">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#9366E8]/15 text-[#9366E8]">
               <FileOutput className="h-5 w-5" />
             </div>
             <div>
@@ -200,7 +215,7 @@ export default function ReportsDashboard() {
               <p className="text-xs text-white/50">Prepare and export disclosures</p>
             </div>
           </div>
-          <ArrowRight className="h-4 w-4 text-white/40 group-hover:text-violet-400 transition-colors" />
+          <ArrowRight className="h-4 w-4 text-white/40 group-hover:text-[#9366E8] transition-colors" />
         </Link>
 
         <Link
@@ -208,7 +223,7 @@ export default function ReportsDashboard() {
           className="glass-card p-5 hover:bg-white/[0.10] transition-all duration-300 group flex items-center justify-between"
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-500/15 text-violet-400">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#9366E8]/15 text-[#9366E8]">
               <History className="h-5 w-5" />
             </div>
             <div>
@@ -216,7 +231,7 @@ export default function ReportsDashboard() {
               <p className="text-xs text-white/50">Track all system and user actions</p>
             </div>
           </div>
-          <ArrowRight className="h-4 w-4 text-white/40 group-hover:text-violet-400 transition-colors" />
+          <ArrowRight className="h-4 w-4 text-white/40 group-hover:text-[#9366E8] transition-colors" />
         </Link>
       </div>
     </div>

@@ -1,12 +1,14 @@
 import React, { useMemo, useState } from "react";
 import {
   FileOutput,
-  Download,
   Filter,
   Eye,
   CheckCircle2,
   Clock,
 } from "lucide-react";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
 import PageHeader from "@/components/PageHeader";
 import LoadingState from "@/components/LoadingState";
 import { Badge } from "@/components/ui/badge";
@@ -91,14 +93,14 @@ Training completion rate: 97% of all employees completed mandatory annual traini
 }
 
 const STATUS_STYLES = {
-  Complete: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
+  Complete: "bg-[#0FD68C]/15 text-[#0FD68C] border-[#0FD68C]/25",
   Partial: "bg-amber-500/15 text-amber-400 border-amber-500/25",
   Missing: "bg-red-500/15 text-red-400 border-red-500/25",
 };
 
 const STANDARD_BADGE = {
-  E: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-  S: "bg-sky-500/20 text-sky-400 border-sky-500/30",
+  E: "bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30",
+  S: "bg-[#2B5AEE]/20 text-[#2B5AEE] border-[#2B5AEE]/30",
   G: "bg-amber-500/20 text-amber-400 border-amber-500/30",
 };
 
@@ -110,6 +112,8 @@ function qualityScore(kpis) {
 }
 
 export default function ESRSExport() {
+  const insights = usePageInsights("export");
+  const handoff = usePageHandoff("export");
   const { data: kpis, loading: kpiLoading } = useCompanyESRSKPIs();
   const { loading: iroLoading } = useCompanyIRORegister();
   const emissions = useCompanyEmissionsSummary();
@@ -117,7 +121,7 @@ export default function ESRSExport() {
   const [format, setFormat] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [activeTab, setActiveTab] = useState("disclosures");
-  const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [exportDialogOpen] = useState(false);
 
   const loading = kpiLoading || iroLoading;
 
@@ -161,37 +165,36 @@ export default function ESRSExport() {
         title="ESRS Export"
         subtitle={`Prepare and export ESRS-compliant disclosures for ${company.name}`}
         stage="reports"
-        actions={
-          <Button
-            size="sm"
-            className="bg-violet-600 hover:bg-violet-700 text-white text-xs gap-1.5"
-            onClick={() => setExportDialogOpen(!exportDialogOpen)}
-          >
-            <Download className="h-3.5 w-3.5" />
-            Export Report
-          </Button>
-        }
+        actions={<><AgentHandoffButton handoff={handoff} /><Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2"><FileOutput className="h-3.5 w-3.5" />Preview</Button></>}
       />
 
       {exportDialogOpen && (
-        <div className="glass-card p-5 border-violet-500/20 animate-fade-in">
+        <div className="glass-card p-5 border-[#9366E8]/20 animate-fade-in">
           <div className="flex items-center gap-3 mb-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/15 text-violet-400">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#9366E8]/15 text-[#9366E8]">
               <FileOutput className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-sm font-medium text-violet-400">Export Configuration</p>
+              <p className="text-sm font-medium text-[#9366E8]">Export Configuration</p>
               <p className="text-xs text-white/50">Demo mode - no files will be generated</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-            <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-[#0FD68C]/10 border border-[#0FD68C]/20">
+            <CheckCircle2 className="h-4 w-4 text-[#0FD68C] shrink-0" />
             <p className="text-xs text-white/60">
               {counts.complete} of {counts.total} disclosures ready.{" "}
               {counts.partial > 0 && `${counts.partial} partially complete. `}
               {counts.missing > 0 && `${counts.missing} require additional data.`}
             </p>
           </div>
+        </div>
+      )}
+
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
         </div>
       )}
 
@@ -229,7 +232,7 @@ export default function ESRSExport() {
 
         <div className="ml-auto flex items-center gap-3 text-[10px]">
           <span className="flex items-center gap-1">
-            <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+            <CheckCircle2 className="h-3 w-3 text-[#0FD68C]" />
             <span className="text-white/50">{counts.complete} Complete</span>
           </span>
           <span className="flex items-center gap-1">
@@ -243,7 +246,7 @@ export default function ESRSExport() {
         <TabsList className="bg-white/[0.08] border border-white/[0.12]">
           <TabsTrigger
             value="disclosures"
-            className="text-xs data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-400 gap-1.5"
+            className="text-xs data-[state=active]:bg-[#9366E8]/20 data-[state=active]:text-[#9366E8] gap-1.5"
           >
             <FileOutput className="h-3.5 w-3.5" />
             Disclosures
@@ -253,7 +256,7 @@ export default function ESRSExport() {
           </TabsTrigger>
           <TabsTrigger
             value="preview"
-            className="text-xs data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-400 gap-1.5"
+            className="text-xs data-[state=active]:bg-[#9366E8]/20 data-[state=active]:text-[#9366E8] gap-1.5"
           >
             <Eye className="h-3.5 w-3.5" />
             Preview
@@ -308,7 +311,7 @@ export default function ESRSExport() {
                           <span
                             className={`text-xs font-mono font-bold ${
                               d.quality >= 80
-                                ? "text-emerald-400"
+                                ? "text-[#0FD68C]"
                                 : d.quality >= 50
                                 ? "text-amber-400"
                                 : "text-red-400"
@@ -331,7 +334,7 @@ export default function ESRSExport() {
             {buildPreviewDisclosures(emissions).map((disc) => (
               <div key={disc.code} className="glass-card card-report p-5 space-y-3">
                 <div className="flex items-center gap-2">
-                  <Badge className="bg-violet-500/20 text-violet-400 border-violet-500/30 text-[10px] font-mono font-bold border">
+                  <Badge className="bg-[#9366E8]/20 text-[#9366E8] border-[#9366E8]/30 text-[10px] font-mono font-bold border">
                     {disc.code}
                   </Badge>
                   <span className="text-sm font-medium text-white/90">{disc.title}</span>

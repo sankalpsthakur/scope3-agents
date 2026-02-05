@@ -21,6 +21,10 @@ import {
   Zap,
   Rocket,
 } from "lucide-react";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentActivityFeed from "@/components/AgentActivityFeed";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
 import MetricCard from "@/components/MetricCard";
 import LoadingState from "@/components/LoadingState";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +37,7 @@ import {
   useCompanyAuditTrail,
 } from "@/hooks/useCompanyData";
 
-const SCOPE_COLORS = ["#22c55e", "#0ea5e9", "#22d3ee"];
+const SCOPE_COLORS = ["#0FD68C", "#2B5AEE", "#0CC5D4"];
 
 function fmt(n) {
   return new Intl.NumberFormat("en-US").format(n);
@@ -134,6 +138,8 @@ function formatTimeAgo(isoStr) {
 }
 
 export default function GlobalDashboard() {
+  const insights = usePageInsights("dashboard");
+  const handoff = usePageHandoff("dashboard");
   const { data: company, loading: compLoading } = useCompanyCompanyProfile();
   const emissions = useCompanyEmissionsSummary();
   const { data: iros, loading: iroLoading } = useCompanyIRORegister();
@@ -190,7 +196,7 @@ export default function GlobalDashboard() {
             <Badge className="bg-white/20 text-white/50 border-white/20 text-[10px] border font-mono">
               FY {company.reportingYear}
             </Badge>
-            <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 text-[10px] border">
+            <Badge className="bg-[#0FD68C]/15 text-[#0FD68C] border-[#0FD68C]/30 text-[10px] border">
               {company.sector}
             </Badge>
           </div>
@@ -205,8 +211,8 @@ export default function GlobalDashboard() {
           pct={75}
           keyStat={`${iroStats.total} IROs`}
           keyLabel={`${iroStats.material} material`}
-          color="#f59e0b"
-          colorClass="text-amber-400"
+          color="#1BB892"
+          colorClass="text-[#1BB892]"
           icon={Target}
           to="/strategy/dma"
         />
@@ -216,8 +222,8 @@ export default function GlobalDashboard() {
           pct={90}
           keyStat={fmt(emissions.total)}
           keyLabel="tCO2e quantified"
-          color="#22c55e"
-          colorClass="text-emerald-400"
+          color="#2B5AEE"
+          colorClass="text-[#2B5AEE]"
           icon={Zap}
           to="/calculation/emissions"
         />
@@ -227,8 +233,8 @@ export default function GlobalDashboard() {
           pct={40}
           keyStat={`${supplierStats.active} suppliers`}
           keyLabel="engaged"
-          color="#0ea5e9"
-          colorClass="text-sky-400"
+          color="#0DC2E6"
+          colorClass="text-[#0DC2E6]"
           icon={Rocket}
           to="/execution/reduce"
         />
@@ -283,6 +289,14 @@ export default function GlobalDashboard() {
           variant="primary"
         />
       </div>
+
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
 
       {/* --- Two Column: Chart + Activity --- */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -352,49 +366,10 @@ export default function GlobalDashboard() {
           </div>
         </div>
 
-        {/* RIGHT: Recent Activity Feed */}
-        <div className="glass-card p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-display font-semibold text-white">
-              Recent Activity
-            </h3>
-            <Badge className="bg-white/20 text-white/50 border-white/10 text-[10px] border">
-              Last 5
-            </Badge>
-          </div>
-          <div className="space-y-3">
-            {recentAudit.map((item, idx) => (
-              <div
-                key={item.id}
-                className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/[0.08] transition-colors"
-                style={{ animationDelay: `${idx * 60}ms` }}
-              >
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.10] shrink-0 mt-0.5">
-                  {item.action.includes("import") ? (
-                    <Activity className="h-3.5 w-3.5 text-sky-400" />
-                  ) : item.action.includes("approve") || item.action.includes("Review") ? (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-                  ) : (
-                    <Clock className="h-3.5 w-3.5 text-white/50" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs text-white/80 leading-snug">
-                    <span className="font-medium text-white/90">
-                      {item.actor}
-                    </span>{" "}
-                    {item.action.toLowerCase()}
-                  </p>
-                  <p className="text-[10px] text-white/50 mt-0.5 truncate">
-                    {item.details}
-                  </p>
-                </div>
-                <span className="text-[10px] font-mono text-white/45 shrink-0">
-                  {formatTimeAgo(item.timestamp)}
-                </span>
-              </div>
-            ))}
-          </div>
+        {/* RIGHT: Agent & Team Activity Feed */}
+        <div className="glass-card p-5 space-y-4">
+          <h3 className="text-sm font-display font-semibold text-white/80 tracking-wide">Agent & Team Activity</h3>
+          <AgentActivityFeed />
         </div>
       </div>
 
@@ -405,12 +380,12 @@ export default function GlobalDashboard() {
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
           {[
-            { label: "DMA Assessment", to: "/strategy/dma", icon: Target, color: "text-amber-400" },
-            { label: "IRO Register", to: "/strategy/iro", icon: Layers, color: "text-amber-400" },
-            { label: "Emissions", to: "/calculation/emissions", icon: BarChart3, color: "text-emerald-400" },
-            { label: "Reduce", to: "/execution/reduce", icon: TrendingDown, color: "text-sky-400" },
-            { label: "Suppliers", to: "/execution/suppliers", icon: Building2, color: "text-sky-400" },
-            { label: "Evidence", to: "/execution/evidence", icon: FileCheck, color: "text-sky-400" },
+            { label: "DMA Assessment", to: "/strategy/dma", icon: Target, color: "text-[#1BB892]" },
+            { label: "IRO Register", to: "/strategy/iro", icon: Layers, color: "text-[#1BB892]" },
+            { label: "Emissions", to: "/calculation/emissions", icon: BarChart3, color: "text-[#2B5AEE]" },
+            { label: "Reduce", to: "/execution/reduce", icon: TrendingDown, color: "text-[#0DC2E6]" },
+            { label: "Suppliers", to: "/execution/suppliers", icon: Building2, color: "text-[#0DC2E6]" },
+            { label: "Evidence", to: "/execution/evidence", icon: FileCheck, color: "text-[#0DC2E6]" },
           ].map((link) => (
             <Link
               key={link.to}

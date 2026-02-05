@@ -18,10 +18,15 @@ import {
   ArrowDownRight,
   DollarSign,
   Clock,
+  Plus,
 } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import MetricCard from "@/components/MetricCard";
 import LoadingState from "@/components/LoadingState";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -39,15 +44,15 @@ const PRIORITY_STYLES = {
     "bg-red-500/20 text-red-400 border-red-500/30",
   High: "bg-amber-500/20 text-amber-400 border-amber-500/30",
   Medium:
-    "bg-sky-500/20 text-sky-400 border-sky-500/30",
+    "bg-[#2B5AEE]/20 text-[#2B5AEE] border-[#2B5AEE]/30",
   Low: "bg-white/10 text-white/60 border-white/20",
 };
 
 const STATUS_STYLES = {
   "In Progress":
-    "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+    "bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30",
   Approved:
-    "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
+    "bg-[#0CC5D4]/20 text-[#0CC5D4] border-[#0CC5D4]/30",
   Proposed:
     "bg-white/10 text-white/50 border-white/20",
   "Under Review":
@@ -141,6 +146,8 @@ function ChartTooltip({ active, payload, label }) {
 export default function ReduceDashboard() {
   const { data: recommendations, loading: recLoading } = useCompanyRecommendations();
   const emissions = useCompanyEmissionsSummary();
+  const insights = usePageInsights("reduce");
+  const handoff = usePageHandoff("reduce");
 
   const metrics = useMemo(() => {
     if (!recommendations) return { totalReduction: 0, committed: 0, count: 0 };
@@ -170,6 +177,15 @@ export default function ReduceDashboard() {
         title="Reduction Dashboard"
         subtitle="Track decarbonization targets & reduction initiatives"
         stage="execution"
+        actions={
+          <>
+            <AgentHandoffButton handoff={handoff} />
+            <Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2">
+              <Plus className="h-3.5 w-3.5" />
+              Add Initiative
+            </Button>
+          </>
+        }
       />
 
       {/* --- Metric Cards --- */}
@@ -211,6 +227,14 @@ export default function ReduceDashboard() {
         />
       </div>
 
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
+
       {/* --- Main two-column --- */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         {/* LEFT: Reduction Roadmap Chart */}
@@ -229,11 +253,11 @@ export default function ReduceDashboard() {
               Current Trajectory
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-0.5 bg-emerald-500 rounded-full border-dashed" />
+              <span className="w-3 h-0.5 bg-[#0FD68C] rounded-full border-dashed" />
               Target (-30%)
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-0.5 bg-cyan-500 rounded-full" />
+              <span className="w-3 h-0.5 bg-[#0CC5D4] rounded-full" />
               Committed Reductions
             </div>
           </div>
@@ -271,12 +295,12 @@ export default function ReduceDashboard() {
                   >
                     <stop
                       offset="5%"
-                      stopColor="#22d3ee"
+                      stopColor="#0CC5D4"
                       stopOpacity={0.25}
                     />
                     <stop
                       offset="95%"
-                      stopColor="#22d3ee"
+                      stopColor="#0CC5D4"
                       stopOpacity={0.02}
                     />
                   </linearGradient>
@@ -320,20 +344,20 @@ export default function ReduceDashboard() {
                 <Area
                   type="monotone"
                   dataKey="committed"
-                  stroke="#22d3ee"
+                  stroke="#0CC5D4"
                   strokeWidth={2}
                   fill="url(#committedGrad)"
                   animationDuration={1000}
                 />
                 <ReferenceLine
                   y={274260}
-                  stroke="#22c55e"
+                  stroke="#0FD68C"
                   strokeDasharray="8 4"
                   strokeWidth={2}
                   label={{
                     value: "Target: 274,260 tCO2e",
                     position: "insideTopRight",
-                    fill: "#22c55e",
+                    fill: "#0FD68C",
                     fontSize: 10,
                     fontFamily: "JetBrains Mono",
                   }}
@@ -354,7 +378,7 @@ export default function ReduceDashboard() {
                 Sorted by priority
               </p>
             </div>
-            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px] border">
+            <Badge className="bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30 text-[10px] border">
               {sortedRecs.length} initiatives
             </Badge>
           </div>
@@ -383,8 +407,8 @@ export default function ReduceDashboard() {
                   </p>
                   <div className="grid grid-cols-4 gap-2 text-[11px]">
                     <div className="flex items-center gap-1">
-                      <ArrowDownRight className="h-3 w-3 text-emerald-400" />
-                      <span className="font-mono font-bold text-emerald-400">
+                      <ArrowDownRight className="h-3 w-3 text-[#0FD68C]" />
+                      <span className="font-mono font-bold text-[#0FD68C]">
                         {fmt(rec.estimatedReduction)}
                       </span>
                     </div>
@@ -473,7 +497,7 @@ export default function ReduceDashboard() {
                   <TableCell className="text-right font-mono text-sm text-white/70">
                     {fmt(cat.currentTCO2e)}
                   </TableCell>
-                  <TableCell className="text-right font-mono text-sm text-emerald-400 font-semibold">
+                  <TableCell className="text-right font-mono text-sm text-[#0FD68C] font-semibold">
                     -{fmt(cat.reductionPotential)}
                   </TableCell>
                   <TableCell className="text-right font-mono text-sm text-white/60">
@@ -485,7 +509,7 @@ export default function ReduceDashboard() {
                   <TableCell>
                     <div className="w-full max-w-[120px] h-1.5 bg-white/10 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                        className="h-full bg-[#0FD68C] rounded-full transition-all duration-500"
                         style={{ width: `${Math.min(Number(pct), 100)}%` }}
                       />
                     </div>

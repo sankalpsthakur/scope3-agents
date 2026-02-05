@@ -77,7 +77,7 @@ function SidebarNavItem({ to, icon: Icon, label }) {
           "group flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-all duration-150",
           "border-l-2 -ml-px",
           isActive
-            ? "border-emerald-500 text-emerald-400 bg-emerald-500/15 shadow-[0_0_12px_rgba(16,185,129,0.12)]"
+            ? "border-[#0FD68C] text-[#0FD68C] bg-[#0FD68C]/15 shadow-[0_0_12px_rgba(15,214,140,0.12)]"
             : "border-transparent text-white/65 hover:text-white/90 hover:bg-white/[0.06]"
         )
       }
@@ -105,11 +105,11 @@ function SidebarSection({ label, items }) {
 
 export default function Sidebar() {
   return (
-    <aside className="w-64 h-screen fixed left-0 top-0 bg-gradient-to-b from-[hsl(220,25%,7%)] to-[hsl(220,20%,4%)] border-r border-white/[0.12] flex flex-col z-30">
+    <aside className="w-64 h-screen fixed left-0 top-0 bg-gradient-to-b from-[hsl(200,30%,7%)] to-[hsl(200,25%,4%)] border-r border-white/[0.12] flex flex-col z-30">
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 py-5 border-b border-white/[0.12]">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 shadow-[0_0_12px_rgba(16,185,129,0.2)] ring-1 ring-emerald-500/30">
-          <Activity className="h-4 w-4 text-emerald-400" />
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0FD68C]/20 shadow-[0_0_12px_rgba(15,214,140,0.2)] ring-1 ring-[#0FD68C]/30">
+          <Activity className="h-4 w-4 text-[#0FD68C]" />
         </div>
         <div>
           <span className="font-display text-lg font-bold tracking-wide text-gradient-primary">
@@ -118,14 +118,15 @@ export default function Sidebar() {
         </div>
       </div>
 
+      {/* Workspace Switcher */}
+      <CompanySwitcher />
+
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
         {NAV_SECTIONS.map((section) => (
           <SidebarSection key={section.label} {...section} />
         ))}
       </div>
-
-      <CompanySwitcher />
     </aside>
   );
 }

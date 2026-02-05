@@ -7,10 +7,15 @@ import {
   Layers,
   Wallet,
   BarChart3,
+  Download,
 } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import MetricCard from "@/components/MetricCard";
 import LoadingState from "@/components/LoadingState";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -34,13 +39,13 @@ import { useCompanyProcurementData } from "@/hooks/useCompanyData";
 // Category dot colors
 // ---------------------------------------------------------------------------
 const CATEGORY_COLORS = {
-  Chemicals: "#10b981",
-  "Steel & Metals": "#0ea5e9",
+  Chemicals: "#0FD68C",
+  "Steel & Metals": "#2B5AEE",
   Energy: "#f59e0b",
-  Transport: "#8b5cf6",
+  Transport: "#9366E8",
   "Capital Goods": "#ec4899",
   "Waste Management": "#ef4444",
-  Packaging: "#06b6d4",
+  Packaging: "#0CC5D4",
 };
 
 function CategoryDot({ category }) {
@@ -69,6 +74,8 @@ function formatEUR(amount) {
 // ---------------------------------------------------------------------------
 export default function DataIngestion() {
   const { data: rows, loading } = useCompanyProcurementData();
+  const insights = usePageInsights("ingest");
+  const handoff = usePageHandoff("ingest");
 
   // Filters
   const [divisionFilter, setDivisionFilter] = useState("all");
@@ -131,6 +138,15 @@ export default function DataIngestion() {
         title="Data Ingestion"
         subtitle="Procurement data imported for LCA quantification"
         stage="calculation"
+        actions={
+          <>
+            <AgentHandoffButton handoff={handoff} />
+            <Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2">
+              <Download className="h-3.5 w-3.5" />
+              Manual Upload
+            </Button>
+          </>
+        }
       />
 
       {/* Stats bar */}
@@ -162,6 +178,14 @@ export default function DataIngestion() {
           trendValue="+3 pts"
         />
       </div>
+
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
 
       {/* Filter row */}
       <div className="glass-card card-calculate p-4">
@@ -299,7 +323,7 @@ export default function DataIngestion() {
 
       {/* Import status */}
       <div className="glass-card p-4 flex items-center gap-3">
-        <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+        <CheckCircle2 className="h-5 w-5 text-[#0FD68C] shrink-0" />
         <div>
           <p className="text-sm font-medium text-white/80">
             Last import: Jan 15, 2025
@@ -308,7 +332,7 @@ export default function DataIngestion() {
             20 records imported from SAP S/4HANA -- Batch BATCH-2024-Q4
           </p>
         </div>
-        <Badge className="ml-auto bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+        <Badge className="ml-auto bg-[#0FD68C]/15 text-[#0FD68C] border border-[#0FD68C]/30">
           Synced
         </Badge>
       </div>

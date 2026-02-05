@@ -20,37 +20,41 @@ import {
 import PageHeader from '@/components/PageHeader';
 import MetricCard from '@/components/MetricCard';
 import LoadingState from '@/components/LoadingState';
+import AgentHandoffButton from '@/components/AgentHandoffButton';
+import AgentInsightCard from '@/components/AgentInsightCard';
+import { usePageInsights, usePageHandoff } from '@/context/AgentContext';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCompanyRiskSignals } from '@/hooks/useCompanyData';
 
 const CATEGORY_CONFIG = {
   Regulatory: {
     icon: Scale,
-    color: 'text-sky-400',
-    bgColor: 'bg-sky-500/15',
-    borderColor: 'border-sky-500/25',
-    chartColor: '#38bdf8',
+    color: 'text-[#2B5AEE]',
+    bgColor: 'bg-[#2B5AEE]/15',
+    borderColor: 'border-[#2B5AEE]/25',
+    chartColor: '#2B5AEE',
   },
   Physical: {
     icon: CloudRain,
-    color: 'text-emerald-400',
-    bgColor: 'bg-emerald-500/15',
-    borderColor: 'border-emerald-500/25',
-    chartColor: '#34d399',
+    color: 'text-[#0FD68C]',
+    bgColor: 'bg-[#0FD68C]/15',
+    borderColor: 'border-[#0FD68C]/25',
+    chartColor: '#0FD68C',
   },
   Transition: {
     icon: TrendingUp,
-    color: 'text-amber-400',
-    bgColor: 'bg-amber-500/15',
-    borderColor: 'border-amber-500/25',
-    chartColor: '#fbbf24',
+    color: 'text-[#1BB892]',
+    bgColor: 'bg-[#1BB892]/15',
+    borderColor: 'border-[#1BB892]/25',
+    chartColor: '#1BB892',
   },
   Reputational: {
     icon: Eye,
-    color: 'text-violet-400',
-    bgColor: 'bg-violet-500/15',
-    borderColor: 'border-violet-500/25',
-    chartColor: '#a78bfa',
+    color: 'text-[#9366E8]',
+    bgColor: 'bg-[#9366E8]/15',
+    borderColor: 'border-[#9366E8]/25',
+    chartColor: '#9366E8',
   },
 };
 
@@ -113,7 +117,7 @@ function RiskSignalCard({ signal, index }) {
             </span>
           </div>
 
-          <h4 className="text-sm font-semibold text-white group-hover:text-emerald-300 transition-colors mb-2 leading-snug">
+          <h4 className="text-sm font-semibold text-white group-hover:text-[#0FD68C] transition-colors mb-2 leading-snug">
             {signal.title}
           </h4>
 
@@ -138,7 +142,7 @@ function RiskSignalCard({ signal, index }) {
                 {signal.linkedIROs.map((iro) => (
                   <Badge
                     key={iro}
-                    className="bg-emerald-500/10 text-emerald-400/80 border-emerald-500/20 text-[10px] font-mono border"
+                    className="bg-[#0FD68C]/10 text-[#0FD68C]/80 border-[#0FD68C]/20 text-[10px] font-mono border"
                   >
                     {iro}
                   </Badge>
@@ -153,6 +157,8 @@ function RiskSignalCard({ signal, index }) {
 }
 
 export default function RiskMonitoring() {
+  const insights = usePageInsights("risks");
+  const handoff = usePageHandoff("risks");
   const { data: signals, loading } = useCompanyRiskSignals();
 
   const metrics = useMemo(() => {
@@ -185,6 +191,7 @@ export default function RiskMonitoring() {
         title="Risk Monitoring"
         subtitle="External risk signals & regulatory tracking"
         stage="strategy"
+        actions={<><AgentHandoffButton handoff={handoff} /><Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2"><AlertTriangle className="h-3.5 w-3.5" />Add Signal</Button></>}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -217,6 +224,14 @@ export default function RiskMonitoring() {
           trend="up"
         />
       </div>
+
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-4">
         <div className="space-y-3">

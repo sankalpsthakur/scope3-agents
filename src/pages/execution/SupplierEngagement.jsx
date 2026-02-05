@@ -15,6 +15,9 @@ import {
 import PageHeader from "@/components/PageHeader";
 import MetricCard from "@/components/MetricCard";
 import LoadingState from "@/components/LoadingState";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -36,14 +39,14 @@ const COUNTRY_FLAGS = {
 };
 
 const ENGAGEMENT_STATUS_STYLES = {
-  Active: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-  Invited: "bg-sky-500/20 text-sky-400 border-sky-500/30",
+  Active: "bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30",
+  Invited: "bg-[#2B5AEE]/20 text-[#2B5AEE] border-[#2B5AEE]/30",
   "Not Started": "bg-white/10 text-white/50 border-white/20",
-  Completed: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
+  Completed: "bg-[#0CC5D4]/20 text-[#0CC5D4] border-[#0CC5D4]/30",
 };
 
 const RISK_STYLES = {
-  Low: "text-emerald-400",
+  Low: "text-[#0FD68C]",
   Medium: "text-amber-400",
   High: "text-red-400",
 };
@@ -57,8 +60,8 @@ const CHANNEL_ICON = {
 };
 
 const TRACK_STATUS_STYLES = {
-  Completed: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-  "In Progress": "bg-sky-500/20 text-sky-400 border-sky-500/30",
+  Completed: "bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30",
+  "In Progress": "bg-[#2B5AEE]/20 text-[#2B5AEE] border-[#2B5AEE]/30",
   Pending: "bg-amber-500/20 text-amber-400 border-amber-500/30",
 };
 
@@ -77,6 +80,8 @@ export default function SupplierEngagement() {
   const { data: engagements, loading: engLoading } = useCompanyEngagementTracking();
   const [tab, setTab] = useState("All");
   const [selectedSupplier, setSelectedSupplier] = useState(null);
+  const insights = usePageInsights("suppliers");
+  const handoff = usePageHandoff("suppliers");
 
   const stats = useMemo(() => {
     if (!suppliers) return { active: 0, responseRate: 0, sciApproved: 0, highRisk: 0 };
@@ -112,6 +117,15 @@ export default function SupplierEngagement() {
         title="Supplier Engagement"
         subtitle="Collaborate with suppliers to reduce Scope 3 emissions"
         stage="execution"
+        actions={
+          <>
+            <AgentHandoffButton handoff={handoff} />
+            <Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2">
+              <Building2 className="h-3.5 w-3.5" />
+              Add Supplier
+            </Button>
+          </>
+        }
       />
 
       {/* --- Stats --- */}
@@ -146,6 +160,14 @@ export default function SupplierEngagement() {
         />
       </div>
 
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
+
       {/* --- Filter Tabs --- */}
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList className="bg-white/5 border border-white/10">
@@ -154,7 +176,7 @@ export default function SupplierEngagement() {
               <TabsTrigger
                 key={t}
                 value={t}
-                className="text-xs data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400"
+                className="text-xs data-[state=active]:bg-[#0FD68C]/20 data-[state=active]:text-[#0FD68C]"
               >
                 {t}
                 {suppliers && (
@@ -187,7 +209,7 @@ export default function SupplierEngagement() {
                     }
                     className={`glass-card p-5 cursor-pointer transition-all duration-200 hover:bg-white/[0.12] ${
                       isSelected
-                        ? "border-emerald-500/40 glow-primary"
+                        ? "border-[#0FD68C]/40 glow-primary"
                         : ""
                     }`}
                   >
@@ -248,7 +270,7 @@ export default function SupplierEngagement() {
                       <div
                         className={`flex items-center gap-1 text-[10px] ${
                           supplier.sciTarget
-                            ? "text-emerald-400"
+                            ? "text-[#0FD68C]"
                             : "text-white/40"
                         }`}
                       >
@@ -338,9 +360,9 @@ export default function SupplierEngagement() {
                             <div
                               className={`absolute -left-[17px] top-1 w-2.5 h-2.5 rounded-full border-2 ${
                                 eng.status === "Completed"
-                                  ? "bg-emerald-500 border-emerald-500/50"
+                                  ? "bg-[#0FD68C] border-[#0FD68C]/50"
                                   : eng.status === "In Progress"
-                                  ? "bg-sky-500 border-sky-500/50"
+                                  ? "bg-[#2B5AEE] border-[#2B5AEE]/50"
                                   : "bg-amber-500 border-amber-500/50"
                               }`}
                             />

@@ -4,27 +4,27 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 const VARIANT_STYLES = {
   default: "border-white/[0.12]",
-  primary: "border-emerald-500/35 hover:shadow-[0_0_20px_rgba(16,185,129,0.12)]",
-  secondary: "border-sky-500/35 hover:shadow-[0_0_20px_rgba(14,165,233,0.12)]",
-  accent: "border-cyan-500/35 hover:shadow-[0_0_20px_rgba(6,182,212,0.12)]",
+  primary: "border-[#0FD68C]/35 hover:shadow-[0_0_20px_rgba(15,214,140,0.12)]",
+  secondary: "border-[#2B5AEE]/35 hover:shadow-[0_0_20px_rgba(43,90,238,0.12)]",
+  accent: "border-[#0CC5D4]/35 hover:shadow-[0_0_20px_rgba(12,197,212,0.12)]",
   warning: "border-amber-500/35 hover:shadow-[0_0_20px_rgba(245,158,11,0.12)]",
   destructive: "border-red-500/35 hover:shadow-[0_0_20px_rgba(239,68,68,0.12)]",
 };
 
 const VARIANT_TOP_BORDER = {
   default: "",
-  primary: "border-t-2 border-t-emerald-500/60",
-  secondary: "border-t-2 border-t-sky-500/60",
-  accent: "border-t-2 border-t-cyan-500/60",
+  primary: "border-t-2 border-t-[#0FD68C]/60",
+  secondary: "border-t-2 border-t-[#2B5AEE]/60",
+  accent: "border-t-2 border-t-[#0CC5D4]/60",
   warning: "border-t-2 border-t-amber-500/60",
   destructive: "border-t-2 border-t-red-500/60",
 };
 
 const VARIANT_ICON_BG = {
   default: "bg-white/15 text-white/70",
-  primary: "bg-emerald-500/25 text-emerald-400",
-  secondary: "bg-sky-500/25 text-sky-400",
-  accent: "bg-cyan-500/25 text-cyan-400",
+  primary: "bg-[#0FD68C]/25 text-[#0FD68C]",
+  secondary: "bg-[#2B5AEE]/25 text-[#2B5AEE]",
+  accent: "bg-[#0CC5D4]/25 text-[#0CC5D4]",
   warning: "bg-amber-500/25 text-amber-400",
   destructive: "bg-red-500/25 text-red-400",
 };
@@ -45,7 +45,7 @@ function TrendIndicator({ trend, trendValue }) {
     <div
       className={cn(
         "flex items-center gap-1 text-xs",
-        isUp ? "text-emerald-400" : "text-red-400"
+        isUp ? "text-[#0FD68C]" : "text-red-400"
       )}
     >
       {isUp ? (

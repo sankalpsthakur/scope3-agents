@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CompanyProvider } from './context/CompanyContext';
+import { AgentProvider } from './context/AgentContext';
 import Layout from './components/Layout';
 import Onboarding from './pages/Onboarding';
 
@@ -35,6 +36,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <CompanyProvider>
+        <AgentProvider>
         <Routes>
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/" element={<Layout />}>
@@ -61,6 +63,7 @@ export default function App() {
             <Route path="reports/audit" element={<AuditTrail />} />
           </Route>
         </Routes>
+        </AgentProvider>
       </CompanyProvider>
     </BrowserRouter>
   );

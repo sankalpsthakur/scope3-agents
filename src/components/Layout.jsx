@@ -1,6 +1,9 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
+import AgentStatusBar from "@/components/AgentStatusBar";
+import { useCompany } from "@/context/CompanyContext";
+import { useAgentBootstrap } from "@/hooks/useAgentData";
 
 const ROUTE_META = {
   "/": { title: "Global Dashboard", stage: null },
@@ -30,15 +33,17 @@ const STAGE_LABELS = {
 };
 
 const STAGE_COLORS = {
-  strategy: "bg-amber-500/25 text-amber-400 border-amber-500/40",
-  calculation: "bg-emerald-500/25 text-emerald-400 border-emerald-500/40",
-  execution: "bg-sky-500/25 text-sky-400 border-sky-500/40",
-  reports: "bg-violet-500/25 text-violet-400 border-violet-500/40",
+  strategy: "bg-[#1BB892]/25 text-[#1BB892] border-[#1BB892]/40",
+  calculation: "bg-[#2B5AEE]/25 text-[#2B5AEE] border-[#2B5AEE]/40",
+  execution: "bg-[#0DC2E6]/25 text-[#0DC2E6] border-[#0DC2E6]/40",
+  reports: "bg-[#9366E8]/25 text-[#9366E8] border-[#9366E8]/40",
 };
 
 export default function Layout() {
   const { pathname } = useLocation();
   const meta = ROUTE_META[pathname] || { title: "Page", stage: null };
+  const { activeCompanyId } = useCompany();
+  useAgentBootstrap(activeCompanyId);
 
   return (
     <div className="flex min-h-screen">
@@ -46,8 +51,8 @@ export default function Layout() {
 
       <div className="ml-64 flex-1 flex flex-col min-h-screen">
         {/* Header */}
-        <header className="sticky top-0 z-20 bg-[hsl(220,25%,5%)]/90 backdrop-blur-2xl px-6 py-4 border-b border-white/[0.08]"
-          style={{ boxShadow: '0 1px 0 rgba(16,185,129,0.1)' }}
+        <header className="sticky top-0 z-20 bg-[hsl(200,30%,5%)]/90 backdrop-blur-2xl px-6 py-4 border-b border-white/[0.08]"
+          style={{ boxShadow: '0 1px 0 rgba(15,214,140,0.1)' }}
         >
           <div className="flex items-center gap-3">
             {meta.stage && (
@@ -62,6 +67,9 @@ export default function Layout() {
             </h1>
           </div>
         </header>
+
+        {/* Agent Status Bar */}
+        <AgentStatusBar />
 
         {/* Page content */}
         <main className="flex-1 p-6">

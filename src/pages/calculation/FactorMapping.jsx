@@ -11,10 +11,14 @@ import {
   AlertTriangle,
   ShieldCheck,
   Wand2,
+  Plus,
 } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import MetricCard from "@/components/MetricCard";
 import LoadingState from "@/components/LoadingState";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,14 +38,14 @@ import {
 // Source badge styles
 // ---------------------------------------------------------------------------
 const SOURCE_STYLES = {
-  DEFRA: "bg-sky-500/15 text-sky-400 border-sky-500/30",
-  ecoinvent: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+  DEFRA: "bg-[#2B5AEE]/15 text-[#2B5AEE] border-[#2B5AEE]/30",
+  ecoinvent: "bg-[#0FD68C]/15 text-[#0FD68C] border-[#0FD68C]/30",
   GaBi: "bg-purple-500/15 text-purple-400 border-purple-500/30",
-  GLEC: "bg-cyan-500/15 text-cyan-400 border-cyan-500/30",
+  GLEC: "bg-[#0CC5D4]/15 text-[#0CC5D4] border-[#0CC5D4]/30",
 };
 
 const CONFIDENCE_STYLES = {
-  High: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+  High: "bg-[#0FD68C]/15 text-[#0FD68C] border-[#0FD68C]/30",
   Medium: "bg-amber-500/15 text-amber-400 border-amber-500/30",
   Low: "bg-red-500/15 text-red-400 border-red-500/30",
 };
@@ -52,6 +56,8 @@ const CONFIDENCE_STYLES = {
 export default function FactorMapping() {
   const { data: factors, loading: fLoading } = useCompanyEmissionFactors();
   const { data: procurement, loading: pLoading } = useCompanyProcurementData();
+  const insights = usePageInsights("factors");
+  const handoff = usePageHandoff("factors");
   const [toastShown, setToastShown] = useState(false);
 
   const loading = fLoading || pLoading;
@@ -111,6 +117,15 @@ export default function FactorMapping() {
         title="Factor Mapping"
         subtitle="Emission factor database & procurement mapping status"
         stage="calculation"
+        actions={
+          <>
+            <AgentHandoffButton handoff={handoff} />
+            <Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2">
+              <Plus className="h-3.5 w-3.5" />
+              Add Factor
+            </Button>
+          </>
+        }
       />
 
       {/* Stats bar */}
@@ -140,6 +155,14 @@ export default function FactorMapping() {
           variant="accent"
         />
       </div>
+
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
 
       {/* Two-panel layout */}
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
@@ -251,7 +274,7 @@ export default function FactorMapping() {
                     startAngle={90}
                     endAngle={-270}
                   >
-                    <Cell fill="#10b981" />
+                    <Cell fill="#0FD68C" />
                     <Cell fill="rgba(255,255,255,0.08)" />
                   </Pie>
                 </PieChart>
@@ -268,7 +291,7 @@ export default function FactorMapping() {
             <div className="w-full space-y-1 text-sm">
               <div className="flex items-center justify-between text-white/70">
                 <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span className="w-2 h-2 rounded-full bg-[#0FD68C]" />
                   Mapped
                 </span>
                 <span className="font-mono">{mappingStats.mapped}</span>
@@ -305,8 +328,8 @@ export default function FactorMapping() {
 
           {/* No unmapped -- show all-good card */}
           {mappingStats.unmappedCats.length === 0 && mappingStats.unmapped === 0 && (
-            <div className="glass-card p-5 space-y-2 border-emerald-500/20">
-              <div className="flex items-center gap-2 text-emerald-400">
+            <div className="glass-card p-5 space-y-2 border-[#0FD68C]/20">
+              <div className="flex items-center gap-2 text-[#0FD68C]">
                 <ShieldCheck className="h-4 w-4" />
                 <span className="text-sm font-medium">All categories mapped</span>
               </div>
@@ -328,8 +351,8 @@ export default function FactorMapping() {
 
           {/* Toast */}
           {toastShown && (
-            <div className="glass-card p-3 border-emerald-500/20 animate-fade-in-up">
-              <p className="text-sm text-emerald-400 flex items-center gap-2">
+            <div className="glass-card p-3 border-[#0FD68C]/20 animate-fade-in-up">
+              <p className="text-sm text-[#0FD68C] flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4" />
                 Auto-mapping complete. All factors assigned.
               </p>

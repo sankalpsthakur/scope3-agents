@@ -3,19 +3,19 @@ import { cn } from "@/lib/utils";
 
 const STAGE_CONFIG = {
   strategy: {
-    color: "bg-amber-500/25 text-amber-400 border-amber-500/40",
+    color: "bg-[#1BB892]/25 text-[#1BB892] border-[#1BB892]/40",
     label: "Strategy",
   },
   calculation: {
-    color: "bg-emerald-500/25 text-emerald-400 border-emerald-500/40",
+    color: "bg-[#2B5AEE]/25 text-[#2B5AEE] border-[#2B5AEE]/40",
     label: "Calculate",
   },
   execution: {
-    color: "bg-sky-500/25 text-sky-400 border-sky-500/40",
+    color: "bg-[#0DC2E6]/25 text-[#0DC2E6] border-[#0DC2E6]/40",
     label: "Execute",
   },
   reports: {
-    color: "bg-violet-500/25 text-violet-400 border-violet-500/40",
+    color: "bg-[#9366E8]/25 text-[#9366E8] border-[#9366E8]/40",
     label: "Report",
   },
 };

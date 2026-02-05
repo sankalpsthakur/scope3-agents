@@ -12,10 +12,14 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { Factory, Zap, Truck, Globe, Lock } from "lucide-react";
+import { Factory, Zap, Truck, Globe, Lock, Download } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import MetricCard from "@/components/MetricCard";
 import LoadingState from "@/components/LoadingState";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   useCompanyEmissionsSummary,
@@ -28,17 +32,17 @@ import {
 // Chart color constants
 // ---------------------------------------------------------------------------
 const SCOPE_COLORS = {
-  "Scope 1": "#10b981",
-  "Scope 2": "#0ea5e9",
-  "Scope 3": "#f59e0b",
+  "Scope 1": "#0FD68C",
+  "Scope 2": "#2B5AEE",
+  "Scope 3": "#0CC5D4",
 };
 
 const CATEGORY_PALETTE = [
-  "#10b981",
-  "#0ea5e9",
-  "#06b6d4",
+  "#0FD68C",
+  "#2B5AEE",
+  "#0CC5D4",
   "#f59e0b",
-  "#8b5cf6",
+  "#9366E8",
   "#ec4899",
   "#ef4444",
   "#64748b",
@@ -106,6 +110,8 @@ function ChartTooltip({ active, payload, label, suffix = "" }) {
 // Main component
 // ---------------------------------------------------------------------------
 export default function EmissionsDashboard() {
+  const insights = usePageInsights("emissions");
+  const handoff = usePageHandoff("emissions");
   const summary = useCompanyEmissionsSummary();
   const { data: computeResults, loading: crLoading } = useCompanyComputeResults();
   const { data: procurement, loading: prLoading } = useCompanyProcurementData();
@@ -164,10 +170,13 @@ export default function EmissionsDashboard() {
         subtitle="Scope 1, 2 & 3 GHG inventory overview"
         stage="calculation"
         actions={
-          <Badge className="gap-1.5 bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20">
-            <Lock className="h-3 w-3" />
-            FY 2024
-          </Badge>
+          <>
+            <AgentHandoffButton handoff={handoff} />
+            <Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2">
+              <Download className="h-3.5 w-3.5" />
+              Export Data
+            </Button>
+          </>
         }
       />
 
@@ -210,6 +219,14 @@ export default function EmissionsDashboard() {
           trendValue="-1.7%"
         />
       </div>
+
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
 
       {/* Charts row: Donut + Category bars */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

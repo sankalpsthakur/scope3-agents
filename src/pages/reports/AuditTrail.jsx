@@ -4,10 +4,15 @@ import {
   Filter,
   User,
   Activity,
+  Download,
 } from "lucide-react";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
 import PageHeader from "@/components/PageHeader";
 import LoadingState from "@/components/LoadingState";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -51,17 +56,17 @@ const REPORT_AUDIT_ENTRIES = [
 ];
 
 const ACTION_STYLES = {
-  "Data imported": "bg-sky-500/15 text-sky-400 border-sky-500/25",
-  "Auto-mapping completed": "bg-violet-500/15 text-violet-400 border-violet-500/25",
+  "Data imported": "bg-[#2B5AEE]/15 text-[#2B5AEE] border-[#2B5AEE]/25",
+  "Auto-mapping completed": "bg-[#9366E8]/15 text-[#9366E8] border-[#9366E8]/25",
   "Manual mapping": "bg-amber-500/15 text-amber-400 border-amber-500/25",
-  "Computation triggered": "bg-cyan-500/15 text-cyan-400 border-cyan-500/25",
-  "Computation completed": "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
+  "Computation triggered": "bg-[#0CC5D4]/15 text-[#0CC5D4] border-[#0CC5D4]/25",
+  "Computation completed": "bg-[#0FD68C]/15 text-[#0FD68C] border-[#0FD68C]/25",
   "Hotspot analysis generated": "bg-orange-500/15 text-orange-400 border-orange-500/25",
   "Gap analysis generated": "bg-rose-500/15 text-rose-400 border-rose-500/25",
-  "Review approved": "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
-  "Report snapshot": "bg-violet-500/15 text-violet-400 border-violet-500/25",
-  "Report generated": "bg-violet-500/15 text-violet-400 border-violet-500/25",
-  "Export initiated": "bg-sky-500/15 text-sky-400 border-sky-500/25",
+  "Review approved": "bg-[#0FD68C]/15 text-[#0FD68C] border-[#0FD68C]/25",
+  "Report snapshot": "bg-[#9366E8]/15 text-[#9366E8] border-[#9366E8]/25",
+  "Report generated": "bg-[#9366E8]/15 text-[#9366E8] border-[#9366E8]/25",
+  "Export initiated": "bg-[#2B5AEE]/15 text-[#2B5AEE] border-[#2B5AEE]/25",
 };
 
 const DEFAULT_ACTION_STYLE = "bg-white/10 text-white/60 border-white/15";
@@ -86,6 +91,8 @@ function truncate(str, max = 60) {
 }
 
 export default function AuditTrail() {
+  const insights = usePageInsights("audit");
+  const handoff = usePageHandoff("audit");
   const { data: rawAudit, loading } = useCompanyAuditTrail();
   const [searchQuery, setSearchQuery] = useState("");
   const [actorFilter, setActorFilter] = useState("all");
@@ -137,9 +144,15 @@ export default function AuditTrail() {
         subtitle="Track all system and user actions"
         stage="reports"
         actions={
-          <div className="flex items-center gap-2 text-[10px] text-white/50">
-            <Activity className="h-3.5 w-3.5" />
-            <span className="font-mono">{allEntries.length}</span> total entries
+          <div className="flex items-center gap-2">
+            <AgentHandoffButton handoff={handoff} />
+            <Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2">
+              <Download className="h-3.5 w-3.5" />Export Trail
+            </Button>
+            <div className="flex items-center gap-2 text-[10px] text-white/50">
+              <Activity className="h-3.5 w-3.5" />
+              <span className="font-mono">{allEntries.length}</span> total entries
+            </div>
           </div>
         }
       />
@@ -206,6 +219,14 @@ export default function AuditTrail() {
         </span>
       </div>
 
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
+
       <div className="glass-card card-report overflow-hidden">
         <ScrollArea className="h-[560px]">
           <Table>
@@ -248,8 +269,8 @@ export default function AuditTrail() {
                         <div
                           className={`h-5 w-5 rounded-full flex items-center justify-center text-[9px] font-bold ${
                             entry.actor === "System"
-                              ? "bg-violet-500/20 text-violet-400"
-                              : "bg-sky-500/20 text-sky-400"
+                              ? "bg-[#9366E8]/20 text-[#9366E8]"
+                              : "bg-[#2B5AEE]/20 text-[#2B5AEE]"
                           }`}
                         >
                           {entry.actor === "System" ? "S" : entry.actor[0]}

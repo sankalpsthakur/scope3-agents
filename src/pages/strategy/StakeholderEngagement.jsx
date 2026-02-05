@@ -10,23 +10,27 @@ import {
 import PageHeader from '@/components/PageHeader';
 import MetricCard from '@/components/MetricCard';
 import LoadingState from '@/components/LoadingState';
+import AgentHandoffButton from '@/components/AgentHandoffButton';
+import AgentInsightCard from '@/components/AgentInsightCard';
+import { usePageInsights, usePageHandoff } from '@/context/AgentContext';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCompanyStakeholders } from '@/hooks/useCompanyData';
 
 const TYPE_STYLES = {
   Regulator: 'bg-red-500/20 text-red-400 border-red-500/30',
-  Investor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-  'Employee Rep': 'bg-sky-500/20 text-sky-400 border-sky-500/30',
-  NGO: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-  Supplier: 'bg-violet-500/20 text-violet-400 border-violet-500/30',
-  'Rating Agency': 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+  Investor: 'bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30',
+  'Employee Rep': 'bg-[#2B5AEE]/20 text-[#2B5AEE] border-[#2B5AEE]/30',
+  NGO: 'bg-[#1BB892]/20 text-[#1BB892] border-[#1BB892]/30',
+  Supplier: 'bg-[#9366E8]/20 text-[#9366E8] border-[#9366E8]/30',
+  'Rating Agency': 'bg-[#0CC5D4]/20 text-[#0CC5D4] border-[#0CC5D4]/30',
   Community: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
   Customer: 'bg-pink-500/20 text-pink-400 border-pink-500/30',
 };
 
 const SENTIMENT_CONFIG = {
-  Positive: { dot: 'bg-emerald-500 shadow-[0_0_6px_rgba(34,197,94,0.5)]', label: 'text-emerald-400' },
-  Neutral: { dot: 'bg-sky-500 shadow-[0_0_6px_rgba(56,189,248,0.5)]', label: 'text-sky-400' },
+  Positive: { dot: 'bg-[#0FD68C] shadow-[0_0_6px_rgba(15,214,140,0.5)]', label: 'text-[#0FD68C]' },
+  Neutral: { dot: 'bg-[#2B5AEE] shadow-[0_0_6px_rgba(43,90,238,0.5)]', label: 'text-[#2B5AEE]' },
   Critical: { dot: 'bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.5)]', label: 'text-red-400' },
   Concerned: { dot: 'bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.5)]', label: 'text-amber-400' },
 };
@@ -85,7 +89,7 @@ function StakeholderCard({ stakeholder, index }) {
           {getInitials(stakeholder.name)}
         </div>
         <div className="min-w-0 flex-1">
-          <h4 className="text-sm font-semibold text-white truncate group-hover:text-emerald-300 transition-colors">
+          <h4 className="text-sm font-semibold text-white truncate group-hover:text-[#0FD68C] transition-colors">
             {stakeholder.name}
           </h4>
           <p className="text-[11px] text-white/65 truncate">{stakeholder.role}</p>
@@ -128,6 +132,8 @@ function StakeholderCard({ stakeholder, index }) {
 }
 
 export default function StakeholderEngagement() {
+  const insights = usePageInsights("stakeholders");
+  const handoff = usePageHandoff("stakeholders");
   const { data: stakeholders, loading } = useCompanyStakeholders();
 
   const metrics = useMemo(() => {
@@ -160,6 +166,7 @@ export default function StakeholderEngagement() {
         title="Stakeholder Engagement"
         subtitle="ESRS stakeholder mapping & engagement tracking"
         stage="strategy"
+        actions={<><AgentHandoffButton handoff={handoff} /><Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2"><Users className="h-3.5 w-3.5" />Add Stakeholder</Button></>}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -196,6 +203,14 @@ export default function StakeholderEngagement() {
           trendValue={metrics.pending > 0 ? 'Overdue 60d+' : 'All current'}
         />
       </div>
+
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {stakeholders.map((stakeholder, idx) => (

@@ -18,6 +18,9 @@ import {
 import { cn } from "@/lib/utils";
 import PageHeader from "@/components/PageHeader";
 import LoadingState from "@/components/LoadingState";
+import AgentHandoffButton from "@/components/AgentHandoffButton";
+import AgentInsightCard from "@/components/AgentInsightCard";
+import { usePageInsights, usePageHandoff } from "@/context/AgentContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -39,11 +42,11 @@ import {
 // Constants
 // ---------------------------------------------------------------------------
 const TREEMAP_PALETTE = [
-  "#10b981",
-  "#0ea5e9",
-  "#8b5cf6",
+  "#0FD68C",
+  "#2B5AEE",
+  "#9366E8",
   "#f59e0b",
-  "#06b6d4",
+  "#0CC5D4",
   "#ec4899",
   "#ef4444",
 ];
@@ -58,11 +61,11 @@ const ISSUE_TYPE_STYLES = {
 const IMPACT_STYLES = {
   High: "bg-red-500/15 text-red-400 border-red-500/30",
   Medium: "bg-amber-500/15 text-amber-400 border-amber-500/30",
-  Low: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+  Low: "bg-[#0FD68C]/15 text-[#0FD68C] border-[#0FD68C]/30",
 };
 
 const REDUCTION_STYLES = {
-  High: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+  High: "bg-[#0FD68C]/15 text-[#0FD68C] border-[#0FD68C]/30",
   Medium: "bg-amber-500/15 text-amber-400 border-amber-500/30",
   Low: "bg-white/10 text-white/50 border-white/20",
 };
@@ -74,7 +77,7 @@ function TrendIcon({ trend }) {
   if (trend === "up")
     return <TrendingUp className="h-4 w-4 text-red-400" />;
   if (trend === "down")
-    return <TrendingDown className="h-4 w-4 text-emerald-400" />;
+    return <TrendingDown className="h-4 w-4 text-[#0FD68C]" />;
   return <Minus className="h-4 w-4 text-white/50" />;
 }
 
@@ -168,7 +171,7 @@ function ActorBadge({ actor }) {
       className={cn(
         "text-[10px] border font-medium",
         isSystem
-          ? "bg-cyan-500/15 text-cyan-400 border-cyan-500/30"
+          ? "bg-[#0CC5D4]/15 text-[#0CC5D4] border-[#0CC5D4]/30"
           : "bg-purple-500/15 text-purple-400 border-purple-500/30"
       )}
     >
@@ -181,6 +184,8 @@ function ActorBadge({ actor }) {
 // Main component
 // ---------------------------------------------------------------------------
 export default function HotspotAnalysis() {
+  const insights = usePageInsights("hotspots");
+  const handoff = usePageHandoff("hotspots");
   const { data: hotspots, loading: hLoading } = useCompanyHotspots();
   const { data: gaps, loading: gLoading } = useCompanyGapAnalysis();
   const { data: audit, loading: aLoading } = useCompanyAuditTrail();
@@ -230,17 +235,34 @@ export default function HotspotAnalysis() {
         title="Hotspot Analysis"
         subtitle="Identify top emission sources & data gaps"
         stage="calculation"
+        actions={
+          <>
+            <AgentHandoffButton handoff={handoff} />
+            <Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2">
+              <AlertTriangle className="h-3.5 w-3.5" />
+              Set Alerts
+            </Button>
+          </>
+        }
       />
+
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
 
       <Tabs defaultValue="hotspots" className="space-y-6">
         <TabsList className="bg-white/[0.10] border border-white/10">
-          <TabsTrigger value="hotspots" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
+          <TabsTrigger value="hotspots" className="data-[state=active]:bg-[#0FD68C]/20 data-[state=active]:text-[#0FD68C]">
             Hotspots
           </TabsTrigger>
           <TabsTrigger value="gaps" className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400">
             Gap Analysis
           </TabsTrigger>
-          <TabsTrigger value="audit" className="data-[state=active]:bg-sky-500/20 data-[state=active]:text-sky-400">
+          <TabsTrigger value="audit" className="data-[state=active]:bg-[#2B5AEE]/20 data-[state=active]:text-[#2B5AEE]">
             Audit Trail
           </TabsTrigger>
         </TabsList>
@@ -304,7 +326,7 @@ export default function HotspotAnalysis() {
                       key={h.id}
                       className="border-white/[0.12] hover:bg-white/[0.10] transition-colors"
                       style={{
-                        background: `linear-gradient(90deg, rgba(16,185,129,${gradientOpacity}) 0%, transparent ${Math.min(h.pctOfTotal * 2, 100)}%)`,
+                        background: `linear-gradient(90deg, rgba(15,214,140,${gradientOpacity}) 0%, transparent ${Math.min(h.pctOfTotal * 2, 100)}%)`,
                       }}
                     >
                       <TableCell className="font-mono text-sm text-white/50 text-center">
@@ -317,7 +339,7 @@ export default function HotspotAnalysis() {
                         <div className="flex items-center gap-3">
                           <div className="w-24 h-2 rounded-full bg-white/[0.10] overflow-hidden">
                             <div
-                              className="h-full rounded-full bg-emerald-500/70 transition-all duration-500"
+                              className="h-full rounded-full bg-[#0FD68C]/70 transition-all duration-500"
                               style={{ width: `${barWidth}%` }}
                             />
                           </div>
@@ -395,7 +417,7 @@ export default function HotspotAnalysis() {
                   >
                     {resolved ? (
                       <>
-                        <CheckCircle2 className="h-3.5 w-3.5 mr-1 text-emerald-400" />
+                        <CheckCircle2 className="h-3.5 w-3.5 mr-1 text-[#0FD68C]" />
                         Resolved
                       </>
                     ) : (
@@ -412,7 +434,7 @@ export default function HotspotAnalysis() {
                   <p className="text-xs text-white/50 uppercase tracking-wider font-display mb-1">
                     Recommendation
                   </p>
-                  <p className="text-sm text-cyan-400/80">
+                  <p className="text-sm text-[#0CC5D4]/80">
                     {gap.recommendation}
                   </p>
                 </div>
@@ -450,7 +472,7 @@ export default function HotspotAnalysis() {
                         className={cn(
                           "h-2.5 w-2.5 rounded-full ring-4 ring-background transition-all",
                           event.actor === "System"
-                            ? "bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.4)]"
+                            ? "bg-[#0CC5D4] shadow-[0_0_8px_rgba(12,197,212,0.4)]"
                             : "bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.4)]"
                         )}
                       />

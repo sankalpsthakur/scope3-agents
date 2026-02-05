@@ -7,10 +7,15 @@ import {
   Check,
   X,
   ArrowUpDown,
+  Plus,
 } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
 import MetricCard from '@/components/MetricCard';
 import LoadingState from '@/components/LoadingState';
+import AgentHandoffButton from '@/components/AgentHandoffButton';
+import AgentInsightCard from '@/components/AgentInsightCard';
+import { usePageInsights, usePageHandoff } from '@/context/AgentContext';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -27,23 +32,23 @@ import { useCompanyIRORegister } from '@/hooks/useCompanyData';
 const IRO_TYPE_STYLES = {
   Impact: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
   Risk: 'bg-red-500/20 text-red-400 border-red-500/30',
-  Opportunity: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+  Opportunity: 'bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30',
 };
 
 const TOPIC_BADGE_STYLES = {
-  E: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-  S: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
-  G: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+  E: 'bg-[#0FD68C]/20 text-[#0FD68C] border-[#0FD68C]/30',
+  S: 'bg-[#2B5AEE]/20 text-[#2B5AEE] border-[#2B5AEE]/30',
+  G: 'bg-[#1BB892]/20 text-[#1BB892] border-[#1BB892]/30',
 };
 
 const TIME_HORIZON_STYLES = {
-  'Short-term': 'bg-cyan-500/15 text-cyan-400 border-cyan-500/25',
-  'Medium-term': 'bg-sky-500/15 text-sky-400 border-sky-500/25',
-  'Long-term': 'bg-violet-500/15 text-violet-400 border-violet-500/25',
+  'Short-term': 'bg-[#0CC5D4]/15 text-[#0CC5D4] border-[#0CC5D4]/25',
+  'Medium-term': 'bg-[#2B5AEE]/15 text-[#2B5AEE] border-[#2B5AEE]/25',
+  'Long-term': 'bg-[#9366E8]/15 text-[#9366E8] border-[#9366E8]/25',
 };
 
 const STATUS_STYLES = {
-  Assessed: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25',
+  Assessed: 'bg-[#0FD68C]/15 text-[#0FD68C] border-[#0FD68C]/25',
   'In Progress': 'bg-amber-500/15 text-amber-400 border-amber-500/25',
   'Not Started': 'bg-white/5 text-white/50 border-white/10',
 };
@@ -73,11 +78,11 @@ function SortableHeader({ label, sortKey, currentSort, onSort }) {
     >
       <div className="flex items-center gap-1">
         <span>{label}</span>
-        <ArrowUpDown className={`h-3 w-3 transition-opacity ${isActive ? 'opacity-100 text-emerald-400' : 'opacity-0 group-hover:opacity-50'}`} />
+        <ArrowUpDown className={`h-3 w-3 transition-opacity ${isActive ? 'opacity-100 text-[#0FD68C]' : 'opacity-0 group-hover:opacity-50'}`} />
         {isActive && (
           isAsc
-            ? <ChevronUp className="h-3 w-3 text-emerald-400" />
-            : <ChevronDown className="h-3 w-3 text-emerald-400" />
+            ? <ChevronUp className="h-3 w-3 text-[#0FD68C]" />
+            : <ChevronDown className="h-3 w-3 text-[#0FD68C]" />
         )}
       </div>
     </TableHead>
@@ -85,6 +90,8 @@ function SortableHeader({ label, sortKey, currentSort, onSort }) {
 }
 
 export default function IRORegister() {
+  const insights = usePageInsights("iro");
+  const handoff = usePageHandoff("iro");
   const { data: iros, loading } = useCompanyIRORegister();
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
@@ -150,6 +157,7 @@ export default function IRORegister() {
         title="IRO Register"
         subtitle="Track impacts, risks & opportunities across ESRS topics"
         stage="strategy"
+        actions={<><AgentHandoffButton handoff={handoff} /><Button size="sm" className="bg-[#0FD68C] hover:bg-[#0FD68C]/90 text-black font-medium gap-2"><Plus className="h-3.5 w-3.5" />Add IRO</Button></>}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -179,6 +187,14 @@ export default function IRORegister() {
         />
       </div>
 
+      {insights.length > 0 && (
+        <div className="space-y-2">
+          {insights.map((i) => (
+            <AgentInsightCard key={i.id} insight={i} />
+          ))}
+        </div>
+      )}
+
       <div className="glass-card card-strategy p-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
           <Tabs value={filter} onValueChange={setFilter} className="w-auto">
@@ -186,7 +202,7 @@ export default function IRORegister() {
               <TabsTrigger value="All" className="text-xs data-[state=active]:bg-white/10 data-[state=active]:text-white">All</TabsTrigger>
               <TabsTrigger value="Impacts" className="text-xs data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400">Impacts</TabsTrigger>
               <TabsTrigger value="Risks" className="text-xs data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400">Risks</TabsTrigger>
-              <TabsTrigger value="Opportunities" className="text-xs data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">Opportunities</TabsTrigger>
+              <TabsTrigger value="Opportunities" className="text-xs data-[state=active]:bg-[#0FD68C]/20 data-[state=active]:text-[#0FD68C]">Opportunities</TabsTrigger>
             </TabsList>
           </Tabs>
           <div className="relative flex-1 max-w-xs ml-auto">
@@ -195,7 +211,7 @@ export default function IRORegister() {
               placeholder="Search IROs..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 h-8 text-xs bg-white/[0.03] border-white/[0.08] focus:border-emerald-500/30"
+              className="pl-8 h-8 text-xs bg-white/[0.03] border-white/[0.08] focus:border-[#0FD68C]/30"
             />
           </div>
         </div>
@@ -246,16 +262,16 @@ export default function IRORegister() {
                         {iro.title}
                       </TableCell>
                       <TableCell>
-                        <ScoreBar value={iro.impactMateriality} color="bg-emerald-500" />
+                        <ScoreBar value={iro.impactMateriality} color="bg-[#0FD68C]" />
                       </TableCell>
                       <TableCell>
-                        <ScoreBar value={iro.financialMateriality} color="bg-sky-500" />
+                        <ScoreBar value={iro.financialMateriality} color="bg-[#2B5AEE]" />
                       </TableCell>
                       <TableCell>
                         {iro.isMaterial ? (
                           <div className="flex items-center gap-1">
-                            <Check className="h-3.5 w-3.5 text-emerald-400" />
-                            <span className="text-[10px] text-emerald-400">Yes</span>
+                            <Check className="h-3.5 w-3.5 text-[#0FD68C]" />
+                            <span className="text-[10px] text-[#0FD68C]">Yes</span>
                           </div>
                         ) : (
                           <div className="flex items-center gap-1">
@@ -294,7 +310,7 @@ export default function IRORegister() {
                               </div>
                               <div className="text-[10px]">
                                 <span className="text-white/50">Combined Score: </span>
-                                <span className="font-mono font-bold text-cyan-400">
+                                <span className="font-mono font-bold text-[#0CC5D4]">
                                   {iro.impactMateriality + iro.financialMateriality}
                                 </span>
                               </div>
