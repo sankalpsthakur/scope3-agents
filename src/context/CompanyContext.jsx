@@ -1,0 +1,66 @@
+import React, { createContext, useContext, useState, useMemo } from "react";
+
+const COMPANIES = [
+  {
+    id: "meridian",
+    name: "Meridian GmbH",
+    hq: "Dusseldorf, Germany",
+    sector: "Industrial Manufacturing",
+    industry: "Manufacturing",
+    revenue: "EUR 420M",
+    employees: 3200,
+    reportingYear: 2024,
+    divisions: ["Corporate", "Manufacturing", "Sales", "R&D"],
+    materialTopics: ["E1", "E2", "E3", "E5", "S1", "S2", "G1"],
+  },
+  {
+    id: "heidelberg",
+    name: "Heidelberg Materials SE",
+    hq: "Heidelberg, Germany",
+    sector: "Construction Materials",
+    industry: "Construction",
+    revenue: "EUR 21.1B",
+    employees: 51000,
+    reportingYear: 2024,
+    divisions: ["Cement", "Aggregates", "Ready-Mixed Concrete", "Asphalt"],
+    materialTopics: ["E1", "E3", "E5", "S1", "S2"],
+  },
+  {
+    id: "danone",
+    name: "Groupe Danone SA",
+    hq: "Paris, France",
+    sector: "Food & Beverage",
+    industry: "Food & Agriculture",
+    revenue: "EUR 27.6B",
+    employees: 86000,
+    reportingYear: 2024,
+    divisions: ["Essential Dairy & Plant-Based", "Waters", "Specialised Nutrition"],
+    materialTopics: ["E1", "E4", "E5", "S1", "S2", "S4"],
+  },
+];
+
+const CompanyContext = createContext(null);
+
+export function CompanyProvider({ children }) {
+  const [activeCompanyId, setActiveCompanyId] = useState("meridian");
+
+  const company = useMemo(
+    () => COMPANIES.find((c) => c.id === activeCompanyId) || COMPANIES[0],
+    [activeCompanyId]
+  );
+
+  const value = useMemo(
+    () => ({ activeCompanyId, setActiveCompanyId, company, companies: COMPANIES }),
+    [activeCompanyId, company]
+  );
+
+  return (
+    <CompanyContext.Provider value={value}>{children}</CompanyContext.Provider>
+  );
+}
+
+export function useCompany() {
+  const ctx = useContext(CompanyContext);
+  if (!ctx) throw new Error("useCompany must be used within CompanyProvider");
+  return ctx;
+}

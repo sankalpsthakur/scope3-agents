@@ -1,0 +1,280 @@
+{
+  "assessments": [
+    {
+      "assessment_id": "dma_2024_001",
+      "org_id": "org_rheinmetall",
+      "fiscal_year": 2024,
+      "status": "completed",
+      "methodology": "ESRS_DOUBLE_MATERIALITY",
+      "conducted_by": "PwC Sustainability Advisory (DE)",
+      "approval_date": "2024-06-28T00:00:00Z",
+      "approved_by": "Dr. Katharina Meier, Chief Sustainability Officer",
+      "stakeholders_consulted": 187,
+      "stakeholder_groups": [
+        "Board of Directors",
+        "Employee Works Council",
+        "Key Customers (Top 20)",
+        "Tier-1 Suppliers (Top 30)",
+        "Local Community Representatives (Duesseldorf, Duisburg)",
+        "Institutional Investors",
+        "NGOs (Germanwatch, CDP Europe)",
+        "Regulatory Bodies"
+      ],
+      "iro_items": [
+        {
+          "iro_id": "iro_e1_climate_ghg",
+          "esrs_topic": "E1",
+          "esrs_sub_topic": "E1-1 / Climate Change Mitigation",
+          "title": "GHG Emissions from Manufacturing Operations and Value Chain",
+          "description": "Direct and indirect greenhouse gas emissions arising from energy-intensive manufacturing processes (steel forming, polymer extrusion, CHP operation) and upstream supply chain activities, primarily steel and chemical procurement.",
+          "iro_type": "impact_risk_opportunity",
+          "impact_materiality": 9.2,
+          "financial_materiality": 8.8,
+          "is_material": true,
+          "confidence": 0.92,
+          "time_horizon": "short_medium_long",
+          "likelihood": "almost_certain",
+          "severity": "major",
+          "affected_stakeholders": ["Environment", "Local Communities", "Investors"],
+          "evidence_links": [
+            { "ref": "ESRS E1-1 para 14", "description": "Transition plan for climate change mitigation" },
+            { "ref": "ESRS E1-4 para 33", "description": "GHG emission reduction targets" },
+            { "ref": "ESRS E1-6 para 44", "description": "Gross Scope 1, 2, 3 GHG emissions" },
+            { "ref": "EU Taxonomy Regulation Art. 10", "description": "Substantial contribution to climate change mitigation" }
+          ],
+          "key_findings": "Steel and aluminium procurement accounts for 38% of total Scope 3. CBAM exposure estimated at EUR 45M annually by 2027. Energy cost volatility creates EUR 80-120M EBITDA risk under IEA NZE scenario."
+        },
+        {
+          "iro_id": "iro_e1_climate_adaptation",
+          "esrs_topic": "E1",
+          "esrs_sub_topic": "E1-2 / Climate Change Adaptation",
+          "title": "Physical Climate Risk to Manufacturing Sites and Supply Chains",
+          "description": "Chronic and acute physical climate risks affecting production continuity, particularly flooding risk at Rhine-adjacent facilities and heat stress impacts on polymer processing yields.",
+          "iro_type": "risk",
+          "impact_materiality": 6.5,
+          "financial_materiality": 7.8,
+          "is_material": true,
+          "confidence": 0.78,
+          "time_horizon": "medium_long",
+          "likelihood": "likely",
+          "severity": "significant",
+          "affected_stakeholders": ["Employees", "Customers", "Investors"],
+          "evidence_links": [
+            { "ref": "ESRS E1-3 para 20", "description": "Actions and resources for climate policies" },
+            { "ref": "ESRS E1-9 para 66", "description": "Anticipated financial effects from physical risks" },
+            { "ref": "TCFD Recommendations - Physical Risks", "description": "Acute and chronic risk categories" }
+          ],
+          "key_findings": "2021 Rhine flooding caused EUR 12M in direct losses at Duisburg site. Climate projections indicate 40% increase in extreme precipitation events by 2040 in NRW region. Heat waves reduce polymer extrusion yields by 3-7%."
+        },
+        {
+          "iro_id": "iro_e2_pollution",
+          "esrs_topic": "E2",
+          "esrs_sub_topic": "E2-4 / Pollution of Air, Water, Soil",
+          "title": "Industrial Pollutant Emissions from Manufacturing Processes",
+          "description": "Emissions of NOx, SOx, particulate matter, and VOCs from combustion processes, surface treatment, and painting operations. Includes potential soil contamination at legacy sites.",
+          "iro_type": "impact",
+          "impact_materiality": 7.1,
+          "financial_materiality": 5.9,
+          "is_material": true,
+          "confidence": 0.85,
+          "time_horizon": "short_medium",
+          "likelihood": "likely",
+          "severity": "significant",
+          "affected_stakeholders": ["Local Communities", "Environment", "Employees"],
+          "evidence_links": [
+            { "ref": "ESRS E2-4 para 28", "description": "Pollution of air, water, soil" },
+            { "ref": "ESRS E2-6 para 35", "description": "Anticipated financial effects from pollution" },
+            { "ref": "IED 2010/75/EU", "description": "Industrial Emissions Directive BAT conclusions" }
+          ],
+          "key_findings": "NOx emissions at 1,240 tonnes/year across 4 German sites. Three facilities subject to IED BAT-AEL compliance by 2026. Legacy contamination remediation provision of EUR 18M for Duisburg-Hamborn site."
+        },
+        {
+          "iro_id": "iro_e3_water",
+          "esrs_topic": "E3",
+          "esrs_sub_topic": "E3-1 / Water and Marine Resources",
+          "title": "Water Consumption in Manufacturing and Cooling Processes",
+          "description": "Significant water withdrawal for cooling in metal forming, polymer processing, and CHP operations. Facilities in water-stressed regions (Puebla-MX, Shanghai-CN) face medium-term supply constraints.",
+          "iro_type": "impact_risk",
+          "impact_materiality": 5.8,
+          "financial_materiality": 5.2,
+          "is_material": true,
+          "confidence": 0.81,
+          "time_horizon": "medium_long",
+          "likelihood": "possible",
+          "severity": "moderate",
+          "affected_stakeholders": ["Local Communities", "Environment"],
+          "evidence_links": [
+            { "ref": "ESRS E3-1 para 9", "description": "Water and marine resources policies" },
+            { "ref": "ESRS E3-4 para 28", "description": "Water consumption" },
+            { "ref": "WRI Aqueduct Water Risk Atlas", "description": "Baseline water stress indicators" }
+          ],
+          "key_findings": "Total water withdrawal 8.2M cubic meters/year. Puebla and Shanghai sites in WRI 'High' baseline water stress zones (combined 22% of withdrawal). Closed-loop cooling investment of EUR 6M planned for 2025."
+        },
+        {
+          "iro_id": "iro_e4_biodiversity",
+          "esrs_topic": "E4",
+          "esrs_sub_topic": "E4-1 / Biodiversity and Ecosystems",
+          "title": "Biodiversity Impacts from Land Use and Supply Chain Raw Materials",
+          "description": "Direct land use impacts at manufacturing sites adjacent to protected areas, and indirect biodiversity impacts through upstream mining and forestry supply chains.",
+          "iro_type": "impact",
+          "impact_materiality": 4.3,
+          "financial_materiality": 3.1,
+          "is_material": false,
+          "confidence": 0.62,
+          "time_horizon": "long",
+          "likelihood": "possible",
+          "severity": "minor",
+          "affected_stakeholders": ["Environment", "Local Communities"],
+          "evidence_links": [
+            { "ref": "ESRS E4-1 para 11", "description": "Transition plan for biodiversity" },
+            { "ref": "ESRS E4-5 para 38", "description": "Impact metrics related to biodiversity" },
+            { "ref": "EU Biodiversity Strategy 2030", "description": "Targets for protecting and restoring nature" }
+          ],
+          "key_findings": "Two sites within 5km of Natura 2000 areas. TNFD LEAP assessment initiated Q3 2024. Upstream bauxite and iron ore supply chains carry moderate deforestation risk via Brazilian sources."
+        },
+        {
+          "iro_id": "iro_e5_circular",
+          "esrs_topic": "E5",
+          "esrs_sub_topic": "E5-1 / Resource Use and Circular Economy",
+          "title": "Material Circularity and Waste Reduction in Manufacturing",
+          "description": "Opportunities and risks related to transitioning to circular manufacturing models, including increasing recycled content in products, reducing production waste, and designing for disassembly.",
+          "iro_type": "impact_opportunity",
+          "impact_materiality": 7.8,
+          "financial_materiality": 7.2,
+          "is_material": true,
+          "confidence": 0.88,
+          "time_horizon": "short_medium",
+          "likelihood": "almost_certain",
+          "severity": "significant",
+          "affected_stakeholders": ["Environment", "Customers", "Investors"],
+          "evidence_links": [
+            { "ref": "ESRS E5-1 para 12", "description": "Policies related to resource use and circular economy" },
+            { "ref": "ESRS E5-4 para 32", "description": "Resource inflows" },
+            { "ref": "ESRS E5-5 para 37", "description": "Resource outflows" },
+            { "ref": "EU PPWR (Packaging and Packaging Waste Regulation)", "description": "Recycled content mandates for packaging" }
+          ],
+          "key_findings": "Current recycled content at 31% (target 55% by 2030). Production waste at 48,000 tonnes/year with 78% diversion rate. EU PPWR mandates create EUR 25M compliance investment need. Circular revenue opportunities estimated at EUR 180M by 2028."
+        },
+        {
+          "iro_id": "iro_s1_workforce_health",
+          "esrs_topic": "S1",
+          "esrs_sub_topic": "S1-14 / Health and Safety",
+          "title": "Occupational Health and Safety in Manufacturing Environments",
+          "description": "Worker health and safety risks across heavy manufacturing operations including metal forming, chemical handling, and high-temperature polymer processing.",
+          "iro_type": "impact_risk",
+          "impact_materiality": 8.4,
+          "financial_materiality": 6.5,
+          "is_material": true,
+          "confidence": 0.91,
+          "time_horizon": "short",
+          "likelihood": "likely",
+          "severity": "major",
+          "affected_stakeholders": ["Employees", "Contractors"],
+          "evidence_links": [
+            { "ref": "ESRS S1-14 para 88", "description": "Health and safety metrics" },
+            { "ref": "ESRS S1-1 para 19", "description": "Policies related to own workforce" },
+            { "ref": "ISO 45001:2018", "description": "OH&S management system requirements" }
+          ],
+          "key_findings": "LTIR at 1.8 per million hours worked (industry benchmark 2.1). Three facilities ISO 45001 certified. Chemical exposure incidents declined 34% since 2022 through engineering controls. Target zero fatal accidents maintained since 2019."
+        },
+        {
+          "iro_id": "iro_s1_workforce_training",
+          "esrs_topic": "S1",
+          "esrs_sub_topic": "S1-13 / Training and Skills Development",
+          "title": "Workforce Reskilling for Green Manufacturing Transition",
+          "description": "Strategic need to reskill workforce for EV component manufacturing, digital twin operations, and circular economy processes as traditional ICE automotive demand declines.",
+          "iro_type": "risk_opportunity",
+          "impact_materiality": 6.9,
+          "financial_materiality": 7.4,
+          "is_material": true,
+          "confidence": 0.83,
+          "time_horizon": "short_medium",
+          "likelihood": "almost_certain",
+          "severity": "significant",
+          "affected_stakeholders": ["Employees", "Investors"],
+          "evidence_links": [
+            { "ref": "ESRS S1-13 para 83", "description": "Training and skills development metrics" },
+            { "ref": "ESRS S1-6 para 48", "description": "Characteristics of the undertaking's employees" },
+            { "ref": "EU Green Deal Industrial Plan", "description": "Net-Zero Industry Act workforce provisions" }
+          ],
+          "key_findings": "12,000 employees (29%) in ICE-dependent roles requiring transition pathways. EUR 34M annual training budget, 28 hours/employee average. Partnership with RWTH Aachen on EV manufacturing certification program enrolling 2,400 workers."
+        },
+        {
+          "iro_id": "iro_g1_business_conduct",
+          "esrs_topic": "G1",
+          "esrs_sub_topic": "G1-1 / Business Conduct",
+          "title": "Anti-Corruption and Ethical Business Practices in Global Operations",
+          "description": "Governance risks associated with operations in jurisdictions with elevated corruption risk indices, including supply chain due diligence under German LkSG and EU CSDDD.",
+          "iro_type": "risk",
+          "impact_materiality": 6.2,
+          "financial_materiality": 7.9,
+          "is_material": true,
+          "confidence": 0.86,
+          "time_horizon": "short",
+          "likelihood": "possible",
+          "severity": "major",
+          "affected_stakeholders": ["Investors", "Business Partners", "Regulators"],
+          "evidence_links": [
+            { "ref": "ESRS G1-1 para 7", "description": "Business conduct policies and corporate culture" },
+            { "ref": "ESRS G1-3 para 15", "description": "Prevention and detection of corruption and bribery" },
+            { "ref": "German LkSG (Supply Chain Due Diligence Act)", "description": "Human rights and environmental due diligence obligations" },
+            { "ref": "EU CSDDD (Corporate Sustainability Due Diligence Directive)", "description": "Cross-border due diligence requirements" }
+          ],
+          "key_findings": "LkSG compliance achieved since Jan 2023. 94% of Tier-1 suppliers completed due diligence questionnaire. Two substantiated whistleblower cases resolved in 2024. EUR 2.1M invested in compliance management system upgrade."
+        },
+        {
+          "iro_id": "iro_g1_lobbying",
+          "esrs_topic": "G1",
+          "esrs_sub_topic": "G1-5 / Political Engagement",
+          "title": "Political Engagement and Industry Association Lobbying Alignment",
+          "description": "Potential misalignment between corporate climate commitments and trade association lobbying positions on EU climate legislation (ETS reform, CBAM, PPWR).",
+          "iro_type": "risk",
+          "impact_materiality": 4.8,
+          "financial_materiality": 4.2,
+          "is_material": false,
+          "confidence": 0.71,
+          "time_horizon": "medium",
+          "likelihood": "possible",
+          "severity": "moderate",
+          "affected_stakeholders": ["Investors", "NGOs", "Regulators"],
+          "evidence_links": [
+            { "ref": "ESRS G1-5 para 27", "description": "Political engagement and lobbying activities" },
+            { "ref": "InfluenceMap LobbyMap Assessment", "description": "Corporate climate policy engagement scoring" }
+          ],
+          "key_findings": "Member of 14 industry associations. InfluenceMap alignment score C+. BDI and VDA membership positions partially misaligned with Paris Agreement targets on ETS free allocation phase-out timeline."
+        }
+      ],
+      "matrix": {
+        "artifact_id": "matrix_2024_001",
+        "type": "double_materiality_matrix",
+        "x_axis": "Financial Materiality (0-10)",
+        "y_axis": "Impact Materiality (0-10)",
+        "materiality_threshold": 5.0,
+        "points": [
+          { "iro_id": "iro_e1_climate_ghg", "label": "GHG Emissions", "x": 8.8, "y": 9.2, "quadrant": "material_both", "color": "#dc2626" },
+          { "iro_id": "iro_e1_climate_adaptation", "label": "Climate Adaptation", "x": 7.8, "y": 6.5, "quadrant": "material_both", "color": "#dc2626" },
+          { "iro_id": "iro_e2_pollution", "label": "Industrial Pollution", "x": 5.9, "y": 7.1, "quadrant": "material_both", "color": "#ea580c" },
+          { "iro_id": "iro_e3_water", "label": "Water Resources", "x": 5.2, "y": 5.8, "quadrant": "material_both", "color": "#2563eb" },
+          { "iro_id": "iro_e4_biodiversity", "label": "Biodiversity", "x": 3.1, "y": 4.3, "quadrant": "not_material", "color": "#6b7280" },
+          { "iro_id": "iro_e5_circular", "label": "Circular Economy", "x": 7.2, "y": 7.8, "quadrant": "material_both", "color": "#16a34a" },
+          { "iro_id": "iro_s1_workforce_health", "label": "Health & Safety", "x": 6.5, "y": 8.4, "quadrant": "material_both", "color": "#9333ea" },
+          { "iro_id": "iro_s1_workforce_training", "label": "Workforce Reskilling", "x": 7.4, "y": 6.9, "quadrant": "material_both", "color": "#9333ea" },
+          { "iro_id": "iro_g1_business_conduct", "label": "Business Conduct", "x": 7.9, "y": 6.2, "quadrant": "material_both", "color": "#0d9488" },
+          { "iro_id": "iro_g1_lobbying", "label": "Political Engagement", "x": 4.2, "y": 4.8, "quadrant": "not_material", "color": "#6b7280" }
+        ]
+      },
+      "summary": {
+        "total_iro_items": 10,
+        "material_items": 8,
+        "non_material_items": 2,
+        "highest_combined_score": "iro_e1_climate_ghg",
+        "key_themes": [
+          "GHG emissions from steel/aluminium supply chain and energy-intensive manufacturing dominate materiality",
+          "Circular economy transition presents significant dual materiality as both impact reduction and revenue opportunity",
+          "Workforce transformation for EV/green manufacturing creates strategic financial risk requiring proactive investment",
+          "Physical climate risk increasingly material for Rhine-corridor manufacturing operations"
+        ]
+      }
+    }
+  ]
+}

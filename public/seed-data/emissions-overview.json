@@ -1,0 +1,38 @@
+{
+  "org_id": "org_rheinmetall",
+  "reporting_year": 2024,
+  "base_year": 2022,
+  "currency": "EUR",
+  "total_scope1_tco2e": 28500,
+  "total_scope2_tco2e": 41200,
+  "total_scope3_tco2e": 852400,
+  "scope3_coverage_pct": 87.3,
+  "intensity_tco2e_per_meur": 68.7,
+  "reduction_target_pct": 42,
+  "reduction_achieved_pct": 12.8,
+  "data_quality_score": 3.6,
+  "categories": [
+    { "cat_id": 1, "name": "Cat 1 - Purchased Goods & Services", "tco2e": 412800, "share_pct": 48.4, "dqs": 3.8, "method": "spend-based + hybrid" },
+    { "cat_id": 2, "name": "Cat 2 - Capital Goods", "tco2e": 67200, "share_pct": 7.9, "dqs": 2.9, "method": "spend-based" },
+    { "cat_id": 3, "name": "Cat 3 - Fuel & Energy Related", "tco2e": 31400, "share_pct": 3.7, "dqs": 4.1, "method": "average-data" },
+    { "cat_id": 4, "name": "Cat 4 - Upstream Transportation", "tco2e": 89600, "share_pct": 10.5, "dqs": 3.4, "method": "distance-based" },
+    { "cat_id": 5, "name": "Cat 5 - Waste Generated", "tco2e": 18900, "share_pct": 2.2, "dqs": 3.7, "method": "waste-type" },
+    { "cat_id": 6, "name": "Cat 6 - Business Travel", "tco2e": 12300, "share_pct": 1.4, "dqs": 4.5, "method": "activity-data" },
+    { "cat_id": 7, "name": "Cat 7 - Employee Commuting", "tco2e": 8400, "share_pct": 1.0, "dqs": 2.8, "method": "average-data" },
+    { "cat_id": 9, "name": "Cat 9 - Downstream Transportation", "tco2e": 56700, "share_pct": 6.7, "dqs": 3.2, "method": "distance-based" },
+    { "cat_id": 11, "name": "Cat 11 - Use of Sold Products", "tco2e": 98400, "share_pct": 11.5, "dqs": 3.0, "method": "product-lca" },
+    { "cat_id": 12, "name": "Cat 12 - End-of-Life Treatment", "tco2e": 56700, "share_pct": 6.7, "dqs": 2.6, "method": "average-data" }
+  ],
+  "yearly_trend": [
+    { "year": 2022, "scope1": 31200, "scope2": 44800, "scope3": 921000, "total": 997000 },
+    { "year": 2023, "scope1": 29800, "scope2": 42900, "scope3": 886500, "total": 959200 },
+    { "year": 2024, "scope1": 28500, "scope2": 41200, "scope3": 852400, "total": 922100 }
+  ],
+  "recent_activity": [
+    { "id": "evt_001", "type": "compute_run", "message": "LCA computation completed for Q4 2024 inventory", "timestamp": "2025-01-28T14:32:00Z" },
+    { "id": "evt_002", "type": "engagement_updated", "message": "ArcelorMittal engagement status changed to in_progress", "timestamp": "2025-01-27T11:15:00Z" },
+    { "id": "evt_003", "type": "anomaly_resolved", "message": "Resolved: Unusual spike in Cat 4 emissions for BASF", "timestamp": "2025-01-26T09:44:00Z" },
+    { "id": "evt_004", "type": "assessment_created", "message": "DMA assessment 2024 finalized with 24 IROs", "timestamp": "2025-01-25T16:20:00Z" },
+    { "id": "evt_005", "type": "compute_run", "message": "Hotspot analysis refreshed - 3 new gaps identified", "timestamp": "2025-01-24T10:05:00Z" }
+  ]
+}
