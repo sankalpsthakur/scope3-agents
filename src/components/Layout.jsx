@@ -49,9 +49,9 @@ export default function Layout() {
     <div className="flex min-h-screen">
       <Sidebar />
 
-      <div className="ml-64 flex-1 flex flex-col min-h-screen">
+      <div className="md:ml-64 flex-1 flex flex-col min-h-screen">
         {/* Header */}
-        <header className="sticky top-0 z-20 bg-[hsl(200,30%,5%)]/90 backdrop-blur-2xl px-6 py-4 border-b border-white/[0.08]"
+        <header className="sticky top-0 z-20 bg-[hsl(200,30%,5%)]/90 backdrop-blur-2xl px-6 py-4 pl-16 md:pl-6 border-b border-white/[0.08]"
           style={{ boxShadow: '0 1px 0 rgba(15,214,140,0.1)' }}
         >
           <div className="flex items-center gap-3">

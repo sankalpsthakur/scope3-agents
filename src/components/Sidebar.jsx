@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -19,6 +19,8 @@ import {
   FileBarChart,
   FileOutput,
   History,
+  Menu,
+  X,
 } from "lucide-react";
 import CompanySwitcher from "@/components/CompanySwitcher";
 
@@ -67,11 +69,12 @@ const NAV_SECTIONS = [
   },
 ];
 
-function SidebarNavItem({ to, icon: Icon, label }) {
+function SidebarNavItem({ to, icon: Icon, label, onNavigate }) {
   return (
     <NavLink
       to={to}
       end={to === "/"}
+      onClick={onNavigate}
       className={({ isActive }) =>
         cn(
           "group flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-all duration-150",
@@ -88,7 +91,7 @@ function SidebarNavItem({ to, icon: Icon, label }) {
   );
 }
 
-function SidebarSection({ label, items }) {
+function SidebarSection({ label, items, onNavigate }) {
   return (
     <div className="space-y-1">
       <h3 className="px-3 pt-4 pb-1 text-[10px] font-display uppercase tracking-widest text-white/60">
@@ -96,7 +99,7 @@ function SidebarSection({ label, items }) {
       </h3>
       <nav className="space-y-0.5">
         {items.map((item) => (
-          <SidebarNavItem key={item.to} {...item} />
+          <SidebarNavItem key={item.to} {...item} onNavigate={onNavigate} />
         ))}
       </nav>
     </div>
@@ -104,29 +107,72 @@ function SidebarSection({ label, items }) {
 }
 
 export default function Sidebar() {
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const location = useLocation();
+
+  // Close mobile sidebar on route change
+  React.useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  const closeMobile = () => setMobileOpen(false);
+
   return (
-    <aside className="w-64 h-screen fixed left-0 top-0 bg-gradient-to-b from-[hsl(200,30%,7%)] to-[hsl(200,25%,4%)] border-r border-white/[0.12] flex flex-col z-30">
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-white/[0.12]">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0FD68C]/20 shadow-[0_0_12px_rgba(15,214,140,0.2)] ring-1 ring-[#0FD68C]/30">
-          <Activity className="h-4 w-4 text-[#0FD68C]" />
-        </div>
-        <div>
-          <span className="font-display text-lg font-bold tracking-wide text-gradient-primary">
-            SCOPE3
-          </span>
-        </div>
-      </div>
+    <>
+      {/* Mobile hamburger button */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="md:hidden fixed top-4 left-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-[hsl(200,30%,7%)] border border-white/[0.12] text-white/80 hover:text-white"
+        aria-label="Open menu"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
 
-      {/* Workspace Switcher */}
-      <CompanySwitcher />
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/60 z-40"
+          onClick={closeMobile}
+        />
+      )}
 
-      {/* Navigation */}
-      <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
-        {NAV_SECTIONS.map((section) => (
-          <SidebarSection key={section.label} {...section} />
-        ))}
-      </div>
-    </aside>
+      {/* Sidebar */}
+      <aside
+        className={cn(
+          "w-64 h-screen fixed left-0 top-0 bg-gradient-to-b from-[hsl(200,30%,7%)] to-[hsl(200,25%,4%)] border-r border-white/[0.12] flex flex-col z-50 transition-transform duration-300",
+          "md:translate-x-0",
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        {/* Logo */}
+        <div className="flex items-center justify-between px-5 py-5 border-b border-white/[0.12]">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0FD68C]/20 shadow-[0_0_12px_rgba(15,214,140,0.2)] ring-1 ring-[#0FD68C]/30">
+              <Activity className="h-4 w-4 text-[#0FD68C]" />
+            </div>
+            <span className="font-display text-lg font-bold tracking-wide text-gradient-primary">
+              SCOPE3
+            </span>
+          </div>
+          <button
+            onClick={closeMobile}
+            className="md:hidden flex h-8 w-8 items-center justify-center rounded-md text-white/60 hover:text-white hover:bg-white/[0.06]"
+            aria-label="Close menu"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Workspace Switcher */}
+        <CompanySwitcher />
+
+        {/* Navigation */}
+        <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
+          {NAV_SECTIONS.map((section) => (
+            <SidebarSection key={section.label} {...section} onNavigate={closeMobile} />
+          ))}
+        </div>
+      </aside>
+    </>
   );
 }
